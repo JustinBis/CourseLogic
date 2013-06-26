@@ -1,0 +1,230 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>CourseLogic Class Scheduler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="An organized and logical way to plan your courses!">
+    <meta name="author" content="Justin Bisignano">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <style>
+    	body {
+    		padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+    	}
+    	.table thead tr.visual > th {
+  			background-color: #dff0d8;
+		}
+		#visual.affix{
+			float: right;
+		}
+		.icon-remove{
+			color: #c83025;
+		}
+		.icon-remove:hover{
+			color: #422;
+		}
+		.icon-trash{
+			color: #b81518;
+		}
+		.icon-trash:hover{
+			color: #422;
+		}
+    </style>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="ico/favicon.png">
+  </head>
+  <body>
+  
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">CourseLogic</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container" id="home">
+
+    	<div class="row">
+    		<div class="span12">
+    			<div class="alert alert-info">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<strong>Welcome!</strong> Get started by adding some classes or by logging in!
+				</div>
+				<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#addAClass"><i class="icon-plus"></i>&nbsp; Add a Class</button>
+			</div>
+		</div>
+
+		<div class="row"><div class="span12">&nbsp;</div></div> <!-- Needed as a spacer for God knows why !-->
+
+		<!-- Begin Visual Table !-->
+		<div class="row pull-right" id="visual">
+			<div class="span4" data-spy="affix" data-offset-top="0">
+				<table class="table table-bordered">
+					<thead>
+						<tr class="visual"><th colspan="6" style="text-align: center;">Visual</th></tr>
+						<tr>
+							<th>Time</th>
+							<th>Monday</th>
+							<th>Tuesday</th>
+							<th>Wednesday</th>
+							<th>Thursday</th>
+							<th>Friday</th>
+						</tr>
+					</thead>
+					
+					<tbody>
+						<tr>
+							<th>12:00</th>
+							<td>12345</td>
+							<td>CIWW</td>
+							<td>Professor Someone</td>
+							<td>T&amp;R</td>
+							<td>12:00 - 1:45</tr>
+						</tr>
+						<tr>
+							<th>1:00</th>
+							<td>54321</td>
+							<td>BOBS</td>
+							<td>Professor Other</td>
+							<td>T&amp;R</td>
+							<td>12:00 - 1:45</tr>
+						</tr>
+						<tr>
+							<th>2:00</th>
+							<td>555</td>
+							<td>CIWW</td>
+							<td>Professor Doe</td>
+							<td>M/W</td>
+							<td>9:00 - 10:45</td>
+						</tr>
+					</tbody>				
+				</table>
+			</div>
+		</div>
+		<!-- /visual !-->
+
+		<div class="row">
+			<div class="span7" id="classes">
+
+				<!-- Begin Class Listings !-->
+				<div>
+					<table class="table table-bordered">
+						<tbody id="CSCI-UA-101">
+							<tr class="info">
+								<td colspan="6"><i class="icon-trash icon-large"></i> &nbsp; <strong>CSCI-UA-101: Class Name Here! THIS ONE</strong></td>
+							</tr>
+							<tr>
+								<th></th>
+								<th>Class#</th>
+								<th>Building</th>
+								<th>Professor</th>
+								<th>Days</th>
+								<th>Time</th>
+							</tr>
+							<tr>
+								<td><i class="icon-remove"></i></td>
+								<td>12345</td>
+								<td>CIWW</td>
+								<td>Professor Someone</td>
+								<td>T/R</td>
+								<td>12:00 - 1:45</tr>
+							</tr>
+							<tr>
+								<td><i class="icon-remove"></i></td>
+								<td>54321</td>
+								<td>BOBS</td>
+								<td>Professor Other</td>
+								<td>T/R</td>
+								<td>12:00 - 1:45</tr>
+							</tr>
+							<tr>
+								<td><i class="icon-remove"></i></td>
+								<td>555</td>
+								<td>CIWW</td>
+								<td>Professor Doe</td>
+								<td>M/W</td>
+								<td>9:00 - 10:45</td>
+							</tr>
+						</tbody>				
+					</table>
+				</div>
+
+				<!-- /class listings !-->
+			</div>
+		</div>
+
+    </div> <!-- /container /home -->
+
+    <!-- Modal Add A Class -->
+	<div id="addAClass" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">Add a Class</h3>
+		</div>
+		<div class="modal-body">
+			<p>One fine body…</p>
+		<div id="jsontest">
+			Hello! <br /> How are you?
+		</div>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<button class="btn btn-primary">Add Selected Classes</button>
+		</div>
+	</div>
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- <script src="js/jquery.js"></script>
+    <script src="js/bootstrap-transition.js"></script>
+    <script src="js/bootstrap-alert.js"></script>
+    <script src="js/bootstrap-modal.js"></script>
+    <script src="js/bootstrap-dropdown.js"></script>
+    <script src="js/bootstrap-scrollspy.js"></script>
+    <script src="js/bootstrap-tab.js"></script>
+    <script src="js/bootstrap-tooltip.js"></script>
+    <script src="js/bootstrap-popover.js"></script>
+    <script src="js/bootstrap-button.js"></script>
+    <script src="js/bootstrap-collapse.js"></script>
+    <script src="js/bootstrap-carousel.js"></script>
+    <script src="js/bootstrap-typeahead.js"></script> !-->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- CDN scripts from elsewhere !-->
+    <!-- jQueryUI isn't needed anymore
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    !-->
+
+    <script src="controls.js"></script>
+
+  </body>
+</html>
