@@ -108,19 +108,9 @@ var updateVisual = function(data){
 // Area for example code
 /////////////////////////////////////////////////////////////
 
-
-
 /**
 	Example JSON
 **/
-var exampleClassJson = {
-"classnum": "999",
-"build": "SOME",
-"prof": "Dumbledore",
-"days": "S/S",
-"time": "10:00 - 11:45"
-}
-
 var exampleJson = {
 	"classid": "CSCI-UA-102",
 	"classname": "Intro to Computer Science 2",
@@ -155,9 +145,13 @@ var exampleJson = {
     tagmode: "any",
     format: "json"
   }, function(data) {
-	$('#jsontest').append("Oh "+data.title);
+	$('#classes').append("Oh "+data.title);
 });*/
 
-// Move this append action to a button in the overlay so the overlay controls it, not me.
-appendTable(exampleJson);
+$('#modalAddClassesButton').click(function(){
+	$.getJSON('http://localhost:8088/', function(data) {
+		appendTable(data);
+	});
+	$('#addAClass').modal('hide'); // Hide the modal overlay when the "Add Selected Classes" button is clicked
+})
 

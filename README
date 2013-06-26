@@ -1,0 +1,6 @@
+This repo contains the source code for my website-in-progress, CourseLogic.
+
+The website allows students with complex schedules to select classes more easily and visualize their choices.
+The frontend is static webpages that are driven by javascript.
+jQuery is extensively used to handle events and Ajax requests to a backend server that is run by node.js
+For simplicity, this same server will also serve the static pages.

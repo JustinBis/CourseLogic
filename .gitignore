@@ -218,7 +218,6 @@ pip-log.txt
 # CUSTOM
 ###########
 
-web2py/
 img/
 css/bootstrap.css
 js/bootstrap.js
@@ -226,3 +225,5 @@ font-awesome/scss
 font-awesome/less
 font-awesome/css/font-awesome.css
 font-awesome/css/font-awesome-ie7.css
+node/
+server/node_modules
