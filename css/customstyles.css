@@ -1,0 +1,21 @@
+body {
+	padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+}
+.table thead tr.visual > th {
+	background-color: #dff0d8;
+}
+#visual.affix{
+	float: right;
+}
+.icon-remove{
+	color: #c83025;
+}
+.icon-remove:hover{
+	color: #422;
+}
+.icon-trash{
+	color: #b81518;
+}
+.icon-trash:hover{
+	color: #422;
+}

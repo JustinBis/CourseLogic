@@ -1,34 +1,32 @@
 /**
-	Function to activate all removal icons on the page
+	Attaches a click handler to the trash icons that works even when new tables are added.
 **/
-var activateRemoveIcons = function(){
-	activateTableRemoveIcon();
-	activateRowRemoveIcon();
-}
+$('#classes').on('click', '.icon-trash', function(){
+	$(this).parent().parent().parent().parent().parent().slideUp(400, function(){
+		$(this).remove();
+	});
+	updateSelections();
+});
 
 /**
-	Function to activate the trashcan icon selector to delete the clicked table
+	Attaches a click handler to the remove row icons that works even when new rows are added.
 **/
-var activateTableRemoveIcon = function(){
-	$(".icon-trash").click(function () {
-		$(this).parent().parent().parent().parent().parent().slideUp(400, function(){
-			$(this).remove();
-		});
-		updateSelections();
-	});
-}
-/**
-	Function to activate the delete icon selector to delete the clicked row
-**/
-var activateRowRemoveIcon = function(){
-	$(".icon-remove").click(function () {
-		$(this).parent().parent().remove();
-		updateSelections();
-	});
-}
+$('#classes').on('click', '.icon-remove', function(){
+	$(this).parent().parent().remove();
+	updateSelections();
+});
 
 /**
-	Function to create the outside structure of a class listing table
+	Attaches a click handler to the table rows that will work even for newly added rows
+**/
+$('#classes').on('click', 'tr', function(){
+	toggleRowSelect(this);
+	updateSelections();
+});
+
+
+/**
+	Function to create the outside structure of a class table
 **/
 var createTable = function(data){
 	var s = '<div><table class="table table-bordered"><tbody id="'
@@ -59,6 +57,17 @@ var createRow = function(data){
 	s += data.time
 	s += '</td></tr>'
 	return s
+}
+
+/**
+	Function to append a table based on the given JSON-formatted data
+**/
+var appendTable = function(data){
+	$('#classes').append(createTable(data));
+
+	$.each(data.classes, function() {
+		$('#'+data.classid).append(createRow(this));
+	});
 }
 
 var toggleRowSelect = function(element){
@@ -140,7 +149,7 @@ var exampleJson = {
 }
 
 
-
+// Example getJSON call to an API with passed data
 /*$.getJSON('http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?', {
     tags: "mount rainier",
     tagmode: "any",
@@ -149,18 +158,6 @@ var exampleJson = {
 	$('#jsontest').append("Oh "+data.title);
 });*/
 
-//$('#CSCI-UA-101').append(createRow(examplejson));
-// TODO: Every time some row is added, we have to re-call the icon-remove on click jquery function so that the remove icons update
 // Move this append action to a button in the overlay so the overlay controls it, not me.
+appendTable(exampleJson);
 
-$('#classes').append(createTable(exampleJson));
-
-$.each(exampleJson.classes, function() {
-  $('#'+exampleJson.classid).append(createRow(this));
-});
-
-activateRemoveIcons();
-
-$('tr').click(function(){
-	toggleRowSelect(this);
-});
