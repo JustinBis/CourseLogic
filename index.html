@@ -7,7 +7,7 @@
     <meta name="description" content="An organized and logical way to plan your courses!">
     <meta name="author" content="Justin Bisignano">
 
-    <!-- Le styles -->
+    <!-- styles -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/customstyles.css"
@@ -52,15 +52,15 @@
     		<div class="span12">
     			<div class="alert alert-info">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					<strong>Welcome!</strong> Get started by adding some classes or by logging in!
+					<strong>Welcome!</strong> Get started by adding some classes or by logging in! Remember, this is a beta, so not everything is guarenteed to work.
 				</div>
-				<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#addAClass"><i class="icon-plus"></i>&nbsp; Add a Class</button>
+				<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#selectSubject"><i class="icon-plus"></i>&nbsp; Add a Class</button>
 			</div>
 		</div>
 
-		<div class="row"><div class="span12">&nbsp;</div></div> <!-- Needed as a spacer for God knows why !-->
+		<div class="row"><div class="span12">&nbsp;</div></div> <!-- Needed as a spacer for God knows why -->
 
-		<!-- Begin Visual Table !-->
+		<!-- Begin Visual Table -->
 		<div class="row pull-right" id="visual">
 			<div class="span4" data-spy="affix" data-offset-top="0">
 				<table class="table table-bordered">
@@ -161,12 +161,12 @@
 				</table>
 			</div>
 		</div>
-		<!-- /visual !-->
+		<!-- /visual -->
 
 		<div class="row">
 			<div class="span7" id="classes">
 
-				<!-- Begin Class Listings !-->
+				<!-- Begin Class Listings -->
 				<div>
 					<table class="table table-bordered">
 						<tbody id="EXAMPLE">
@@ -201,27 +201,41 @@
 					</table>
 				</div>
 
-				<!-- /class listings !-->
+				<!-- /class listings -->
 			</div>
 		</div>
 
     </div> <!-- /container /home -->
 
-    <!-- Modal Add A Class -->
-	<div id="addAClass" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <!-- Modal for Add A Class -->
+	<div id="selectTopic" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-			<h3 id="myModalLabel">Add a Class</h3>
+			<h3>Select a Class to Add</h3>
 		</div>
 		<div class="modal-body">
-			<p>One fine body…</p>
-		<div id="jsontest">
-			Hello! <br /> How are you?
-		</div>
+			<select class="fillModal" id="classTopicSelect">
+			</select>
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-			<button class="btn btn-primary" id="modalAddClassesButton">Add Selected Classes</button>
+			<button class="btn btn-primary" id="modalAddClassesButton">Add Selected Class</button>
+		</div>
+	</div>
+
+	<!-- Modal for Select a Subject -->
+	<div id="selectSubject" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>Select a Class Subject</h3>
+		</div>
+		<div class="modal-body">
+			<select class="fillModal" id="classSubjectSelect">
+			</select>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<button class="btn btn-primary" id="modalSelectSubjectButton">Find Classes in Selected Subject</button>
 		</div>
 	</div>
 
@@ -240,15 +254,15 @@
     <script src="js/bootstrap-button.js"></script>
     <script src="js/bootstrap-collapse.js"></script>
     <script src="js/bootstrap-carousel.js"></script>
-    <script src="js/bootstrap-typeahead.js"></script> !-->
+    <script src="js/bootstrap-typeahead.js"></script> -->
     <script src="js/jquery-1.10.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="controls.js"></script>
 
-    <!-- CDN scripts from elsewhere !-->
+    <!-- CDN scripts from elsewhere -->
     <!-- jQueryUI isn't needed anymore
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    !-->
+    -->
 
   </body>
 </html>

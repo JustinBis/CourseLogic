@@ -19,3 +19,6 @@ body {
 .icon-trash:hover{
 	color: #422;
 }
+.fillModal{
+	width: 520px;
+}

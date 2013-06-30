@@ -1,3 +1,9 @@
+/////////////////////
+// USER SET VARIABLES
+/////////////////////
+var host = "localhost:8088"; // Maps to the API host
+
+
 /**
 	Attaches a click handler to the trash icons that works even when new tables are added.
 **/
@@ -28,13 +34,11 @@ $('#classes').on('click', 'tr', function(){
 /**
 	Function to create the outside structure of a class table
 **/
-var createTable = function(data){
+var createTable = function(tableTitle, classID){
 	var s = '<div><table class="table table-bordered"><tbody id="'
-	s += data.classid
+	s += classID
 	s += '"><tr class="info"><td colspan="6"><i class="icon-trash icon-large"></i> &nbsp; <strong>'
-	s += data.classid
-	s += ': '
-	s += data.classname
+	s += tableTitle
 	s += '</strong></td></tr><tr><th></th><th>Class#</th><th>Building</th><th>Professor</th><th>Days</th><th>Time</th></tr></tbody></table></div>'
 	return s
 }
@@ -46,7 +50,7 @@ var createTable = function(data){
 var createRow = function(data){
 	//var s = '<tr><td><i class="icon-remove"></i></td><td>'+data.classnum+'</td><td>'+data.build+'</td><td>'+data.prof'</td><td>'+data.days+'</td><td>'+data.time'</tr></tr>';
 	var s = '<tr><td><i class="icon-remove"></i></td><td>'
-	s += data.classnum
+	s += data.classNum
 	s += '</td><td>'
 	s += data.build
 	s += '</td><td>'
@@ -62,14 +66,17 @@ var createRow = function(data){
 /**
 	Function to append a table based on the given JSON-formatted data
 **/
-var appendTable = function(data){
-	$('#classes').append(createTable(data));
+var appendTable = function(tableTitle, classID, rows){
+	$('#classes').append(createTable(tableTitle, classID));
 
-	$.each(data.classes, function() {
-		$('#'+data.classid).append(createRow(this));
+	$.each(rows, function() {
+		$('#'+classID).append(createRow(this));
 	});
 }
 
+/**
+	Controls the selection of rows. Will deselect other selected row, or toggle the selectd row off
+**/
 var toggleRowSelect = function(element){
 	if($(element).hasClass('success'))
 		$(element).removeClass('success')
@@ -81,77 +88,61 @@ var toggleRowSelect = function(element){
 }
 
 /**
-	A function that searches for selected rows and then updates the visual with the new selections
+	When the topic select modal is opened, this will query the server for the relevant classe topics
 **/
-var updateSelections = function(){
-	rows = $('#classes').find('.success')
-	$.each(rows, function(){
-		// Do something with each selected row here
-		// Extract the data back oout for visual?
-		// Build the info into global variables here
+//
+var subjectsFetched = false; // So we only make a subject request once
+$('#selectSubject').on('show', function(){
+	if(!subjectsFetched){
+		$.getJSON('http://'+host+'/subjects', function(data) {
+			$.each(data, function(){
+				$('#classSubjectSelect').append('<option data-index="'+(this.subjectID)+'">'+this.subjectCode+': '+this.subjectName+'</option>');
+			});
+		});
+		subjectsFetched = true;
+	}
+});
+
+/**
+	When the Subject Select button is clicked, this will hide the modal overlay and save the relevant selection info
+**/
+$('#modalSelectSubjectButton').click(function(){
+	$('#selectSubject').modal('hide');
+	//$('.modal-backdrop').remove();
+	$('#selectTopic').modal('show');
+});
+
+/**
+	When the topic select modal is opened, this will query the server for the relevant classe topics
+**/
+$('#selectTopic').on('show', function(){
+	var subjectID = $('#classSubjectSelect option:selected').attr('data-index');
+	$.getJSON('http://'+host+'/topics?subjectID='+subjectID, function(data) {
+		$.each(data, function(){
+			$('#classTopicSelect').append('<option data-index="'+this.classID+'">'+this.classID+': '+this.className+'</option>');
+		});
 	});
-	updateVisual()
-}
+});
 
 /**
-	A function to update the visual from the global variables
+	When the "Add Selected Classes" button is clicked, hides the modal overlay and creates a table
 **/
-var updateVisual = function(data){
-
-}
-
-// I should be drawing the visual from a set of global variables that store each selected class and their
-// relevant attributes, such as classID and times
-
-
-/////////////////////////////////////////////////////////////
-// Area for example code
-/////////////////////////////////////////////////////////////
-
-/**
-	Example JSON
-**/
-var exampleJson = {
-	"classid": "CSCI-UA-102",
-	"classname": "Intro to Computer Science 2",
-	"classes":
-	[{
-		"classnum": "999",
-		"build": "SOME",
-		"prof": "Dumbledore",
-		"days": "S/S",
-		"time": "10:00 - 11:45"
-	},
-	{
-		"classnum": "888",
-		"build": "SOME",
-		"prof": "Professor Snape",
-		"days": "S/S",
-		"time": "10:00 - 11:45"
-	},
-	{
-		"classnum": "777",
-		"build": "SOME",
-		"prof": "Professor Moody",
-		"days": "S/S",
-		"time": "10:00 - 11:45"
-	}]
-}
-
-
-// Example getJSON call to an API with passed data
-/*$.getJSON('http://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?', {
-    tags: "mount rainier",
-    tagmode: "any",
-    format: "json"
-  }, function(data) {
-	$('#classes').append("Oh "+data.title);
-});*/
-
 $('#modalAddClassesButton').click(function(){
-	$.getJSON('http://localhost:8088/', function(data) {
-		appendTable(data);
-	});
-	$('#addAClass').modal('hide'); // Hide the modal overlay when the "Add Selected Classes" button is clicked
-})
+	var classID = $('#classTopicSelect option:selected').attr('data-index');
+	var tableTitle = $('#classTopicSelect option:selected').val();
 
+	// Request the classes and then make a table
+	$.getJSON('http://'+host+'/classes?classID='+classID, function(data){
+		appendTable(tableTitle, classID, data);
+	});
+
+	// Hide the overlay
+	$('#selectTopic').modal('hide');
+});
+
+/**
+	When the topic selector is closed, clean up the options
+**/
+$('#selectTopic').on('hidden', function(){
+	$('#classTopicSelect').empty();
+});
