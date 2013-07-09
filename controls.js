@@ -10,15 +10,23 @@ var host = "localhost:8088"; // Maps to the API host
 $('#classes').on('click', '.icon-trash', function(){
 	$(this).parent().parent().parent().parent().parent().slideUp(400, function(){
 		$(this).remove();
+		updateSelections();
 	});
-	updateSelections();
 });
 
 /**
 	Attaches a click handler to the remove row icons that works even when new rows are added.
 **/
 $('#classes').on('click', '.icon-remove', function(){
-	$(this).parent().parent().remove();
+	var row = $(this).parent().parent();
+	// If the table has three or fewer rows (<tr>s), it will be empty now and should be removed.
+	if(row.parent().children("tr").length <= 3)
+		row.parent().parent().parent().slideUp(400, function(){
+			this.remove(); // Removes the <div> surrouding the table
+		});
+	else
+		row.remove();
+	
 	updateSelections();
 });
 
@@ -39,7 +47,7 @@ var createTable = function(tableTitle, classID){
 	s += classID
 	s += '"><tr class="info"><td colspan="6"><i class="icon-trash icon-large"></i> &nbsp; <strong>'
 	s += tableTitle
-	s += '</strong></td></tr><tr><th></th><th>Class#</th><th>Building</th><th>Professor</th><th>Days</th><th>Time</th></tr></tbody></table></div>'
+	s += '</strong></td></tr><tr class="tableHead"><th></th><th>Class#</th><th>Building</th><th>Professor</th><th>Days</th><th>Time</th></tr></tbody></table></div>'
 	return s
 }
 
@@ -80,6 +88,8 @@ var appendTable = function(tableTitle, classID, rows){
 var toggleRowSelect = function(element){
 	if($(element).hasClass('success'))
 		$(element).removeClass('success')
+	else if($(element).hasClass('info') || $(element).hasClass('tableHead'))
+		return null;
 	else
 	{
 		$(element).parent().find('.success').removeClass('success')

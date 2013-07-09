@@ -53,7 +53,6 @@ http.createServer(function (request, response) {
 		});
 	}
 	else if(path == "/classes"){
-		console.log(requestData.classID);
 		database.getClasses(requestData.classID, function(rows){
 			if(rows){
 				response.writeHead(200, successHeader);
@@ -71,8 +70,19 @@ http.createServer(function (request, response) {
 
 console.log('CourseLogic Back-End http webserver running at http://127.0.0.1:'+APIPort+'/');
 
-var handleRequest = function(){
-
+/**
+	Takes in an http reponse object and rows from the database and then sends the response back to the client.	
+**/
+var sendDatabaseResponse = function(response, rows){
+	if(rows){
+		response.writeHead(200, successHeader);
+		response.write(JSON.stringify(rows));
+		response.end();
+	}
+	else{
+		response.writeHead(400);
+		response.end();
+	}
 }
 
 

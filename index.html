@@ -60,108 +60,12 @@
 
 		<div class="row"><div class="span12">&nbsp;</div></div> <!-- Needed as a spacer for God knows why -->
 
-		<!-- Begin Visual Table -->
-		<div class="row pull-right" id="visual">
-			<div class="span4" data-spy="affix" data-offset-top="0">
-				<table class="table table-bordered">
-					<thead>
-						<tr class="visual"><th colspan="6" style="text-align: center;">Visual</th></tr>
-						<tr>
-							<th>Time</th>
-							<th>Monday</th>
-							<th>Tuesday</th>
-							<th>Wednesday</th>
-							<th>Thursday</th>
-							<th>Friday</th>
-						</tr>
-					</thead>
-					
-					<tbody>
-						<tr>
-							<th>8:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>9:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>10:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>11:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>12:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>1:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>2:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>3:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>4:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>5:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-					</tbody>				
-				</table>
-			</div>
+		<!-- Begin Visual Canvas -->
+		<div class="row pull-right">
+			<canvas id="visual" width="350" height="600">
+				<strong>Your browser doesn't support Canvas elements.</strong>
+			</canvas>
 		</div>
-		<!-- /visual -->
 
 		<div class="row">
 			<div class="span7" id="classes">
@@ -169,11 +73,11 @@
 				<!-- Begin Class Listings -->
 				<div>
 					<table class="table table-bordered">
-						<tbody id="EXAMPLE">
+						<tbody id="EXAMP-UA-101">
 							<tr class="info">
 								<td colspan="6"><i class="icon-trash icon-large"></i> &nbsp; <strong>EXAMPLE-101: An Example Class (Add your own above)</strong></td>
 							</tr>
-							<tr>
+							<tr class="tableHead">
 								<th></th>
 								<th>Class#</th>
 								<th>Building</th>
@@ -189,7 +93,7 @@
 								<td>M/W</td>
 								<td>8:00 - 9:45</tr>
 							</tr>
-							<tr>
+							<tr class="success">
 								<td><i class="icon-remove"></i></td>
 								<td>0000</td>
 								<td>THERE</td>
@@ -201,8 +105,7 @@
 					</table>
 				</div>
 
-				<!-- /class listings -->
-			</div>
+			</div><!-- /class listings -->
 		</div>
 
     </div> <!-- /container /home -->
@@ -239,30 +142,13 @@
 		</div>
 	</div>
 
-    <!-- Le javascript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <!-- <script src="js/jquery.js"></script>
-    <script src="js/bootstrap-transition.js"></script>
-    <script src="js/bootstrap-alert.js"></script>
-    <script src="js/bootstrap-modal.js"></script>
-    <script src="js/bootstrap-dropdown.js"></script>
-    <script src="js/bootstrap-scrollspy.js"></script>
-    <script src="js/bootstrap-tab.js"></script>
-    <script src="js/bootstrap-tooltip.js"></script>
-    <script src="js/bootstrap-popover.js"></script>
-    <script src="js/bootstrap-button.js"></script>
-    <script src="js/bootstrap-collapse.js"></script>
-    <script src="js/bootstrap-carousel.js"></script>
-    <script src="js/bootstrap-typeahead.js"></script> -->
+	<!-- Local Javascript -->
     <script src="js/jquery-1.10.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="controls.js"></script>
+    <script src="visual.js"></script>
 
-    <!-- CDN scripts from elsewhere -->
-    <!-- jQueryUI isn't needed anymore
-    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-    -->
+    <!-- Hosted CDN scripts -->
 
   </body>
 </html>
