@@ -6,7 +6,8 @@ var mysql = require('mysql'); // requires installation: npm install mysql@2.0.0-
 /////////////////////////
 var username = 'CourseLogicUser';
 var password = 'YsaEJNTHPmKyVNFs'; // Randomly Generated Pass
-var host = '192.168.1.77'; // No getting into to my server now! Local only
+//var host = '192.168.1.77'; // No getting into to my server now! Local only
+var host = '66.172.33.243'; // Chunk host
 var database = 'CourseLogic';
 
 /*
@@ -22,6 +23,8 @@ var pool = mysql.createPool({
 function getSubjects(callback){
 	// Create a new connection from the pool and query for info
 	pool.getConnection(function(err, connection){
+		if (err) logError(err);
+		
 		connection.query('SELECT * FROM `Subjects` WHERE `hasClasses` = 1', function(err, rows){
 			if(err){
 				console.log("\nError on call of getSubjects()");
@@ -59,6 +62,17 @@ function getClasses(classID, callback){
 				console.log("\nError on call of getClasses() with classID: "+classID);
 				logError(err);
 			}
+			// Parse the times JSON in the DB so that we don't send escaped strings back instead of an object
+			try{
+				for(var index in rows)
+					rows[index].times = JSON.parse(rows[index].times);
+			}
+			catch(e){
+				console.log("Error parsing times JSON from the DB:");
+				console.log(e);
+				rows = null; // Clear the rows so we return an error on the HTTP request
+			}
+			
 			callback(rows);
 			connection.end();
 		});

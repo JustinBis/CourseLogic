@@ -18,9 +18,6 @@ var selectedSections = [
 	"endTime": [12,45]
 }];
 
-// Will execute once the script is loaded. So long as the script is loaded after the canvas is created, we're good.
-updateVisual();
-
 function drawBase(){
 	// Clear the canvas for a redraw
 	context.clearRect(0, 0, canvas.width, canvas.height);
@@ -142,12 +139,13 @@ var updateSelections = function(){
 	rows = $('#classes').find('.success')
 	$.each(rows, function(){
 		// First, extract the name by selecting the parent's ID, then splitting over every -
-		var classID = this.parentElement.id.split("-"); // CSCI-UA-101 becomes [CSCI, UA, 101]
-		var name = [classID[0], classID[2]]; // Store as [CSCI, 101]
+		var classID = this.parentElement.id.split("-"); // EXAMP 0101 becomes [EXAMP, 0101]
+		var name = [classID[0], classID[1]]; // Store as [EXAMP, 0101]
 
-		// Extract the raw day and time data
-		var rawDays = this.children[4].innerHTML.split("/");
-		var rawTimes = this.children[5].innerHTML.split("-");
+		// Extract the raw day and time data, removing any witespace.
+		columns = this.children.length - 1; // Number of columns in this row, zero indexed
+		var rawDays = this.children[columns-1].innerHTML.replace(/\s+/g, '');
+		var rawTimes = this.children[columns].innerHTML.replace(/\s+/g, '').split("-");
 
 		// Parse the days
 		var days = [];
@@ -164,15 +162,9 @@ var updateSelections = function(){
 		}
 
 		// Parse the times
-		// Remove any whitespace
-		var startTime = rawTimes[0].replace(/\s+/g, '').split(":");
-		var endTime = rawTimes[1].replace(/\s+/g, '').split(":");
+		var startTime = parseTime(rawTimes[0]);
+		var endTime = parseTime(rawTimes[1]);
 
-		// Convert to integers
-		startTime[0] = parseInt(startTime[0]);
-		startTime[1] = parseInt(startTime[1]);
-		endTime[0] = parseInt(endTime[0]);
-		endTime[1] = parseInt(endTime[1]);
 
 		// Finally, build the object and push it onto the global store
 		selectedSections.push({
@@ -186,9 +178,40 @@ var updateSelections = function(){
 }
 
 /**
+	A function that takes a 12 hour time and converts it to 24 hour,
+	then returns a formatted time arrary with integers [hours, minutes]
+**/
+function parseTime(inputTime){
+	// Store a cleaned and split version of the input time in numbers only
+	var split = inputTime.replace(/[a-zA-Z]/g, '').split(":");
+	var hours = split[0];
+	var minutes = split[1];
+
+	// If the time is am, don't change the hours
+	if(/am/.test(inputTime)){
+		// Handle the edge case of 12:00 am being 00 hours (if input starts with 12)
+		if(/^12/.test(inputTime))
+			hours = 00;
+	}
+	// If the time is pm, change the hours to 24 hour time
+	else if(/pm/.test(inputTime)){
+		// Don't handle the edge case of 12:00 pm, as it is the correct hour already
+		if(!(/^12/.test(inputTime))){
+			// Convert to an integer and add 12 hours to make it 24 hour time
+			hours = parseInt(hours) + 12;
+		}
+	}
+
+	return [parseInt(hours), parseInt(minutes)];
+}
+
+/**
 	A function to update the visual from the global variables
 **/
 function updateVisual(){
 	drawBase();
 	drawClasses(selectedSections);
 }
+
+// Will execute once the script is loaded. So long as the script is loaded after the canvas is created, we're good.
+updateVisual();

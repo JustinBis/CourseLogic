@@ -1,0 +1,150 @@
+Inital URL: https://ssbprod.auburn.edu/pls/PROD/bwckschd.p_disp_dyn_sched
+
+Check this URL out for grabbing courseInfo:
+http://bulletin.auburn.edu/ribbit/index.cgi?page=getcourse.rjs&code=COMP%202210
+Some JS on this page handles it: http://bulletin.auburn.edu/undergraduate/samuelginncollegeofengineering/departmentofcomputerscienceandsoftwareengineering/computerscience_major/
+
+
+Python Commands:
+import mechanize
+mechanize.Browser()
+br.set_debug_redirects(True)
+br.set_debug_responses(True)
+br.set_debug_http(True)
+br.open("https://ssbprod.auburn.edu/pls/PROD/bwckschd.p_disp_dyn_sched")
+br.select_form(nr=0)
+br['p_term'] = ['201410']
+response = br.submit()
+br.select_form(nr=0)
+control = br.form.find_control(id="subj_id")
+control.set(True, 'PHYS')
+br.submit()
+
+
+Previous exampleJson = {
+	"classid": "CSCI-UA-102",
+	"classname": "Intro to Computer Science 2",
+	"classes":
+	[{
+		"classnum": "999",
+		"build": "SOME",
+		"prof": "Dumbledore",
+		"days": "S/S",
+		"time": "10:00 - 11:45"
+	},
+	{
+		"classnum": "888",
+		"build": "SOME",
+		"prof": "Professor Snape",
+		"days": "S/S",
+		"time": "10:00 - 11:45"
+	},
+	{
+		"classnum": "777",
+		"build": "SOME",
+		"prof": "Professor Moody",
+		"days": "S/S",
+		"time": "10:00 - 11:45"
+	}]
+}
+
+Updated for list of days and times:
+var exampleJson = [{
+	"crn": "11126",
+	"section": "001",
+	"prof": "Teck G. Lee",
+	"times": 
+		[{
+			"type": "lecture",
+			"days": "MWF",
+			"time": "10:00am-10:50am",
+			"location": "Parker Hall 319"
+		},
+		{
+			"type": "lab",
+			"days": "M",
+			"time": "12:00pm-2:50pm",
+			"location": "Parker Hall 104"
+		}]
+	},
+	{
+	"crn": "123",
+	"section": "987",
+	"prof": "Dumbledore",
+	"times": 
+		[{
+			"type": "lecture",
+			"days": "TR",
+			"time": "11:00-12:15",
+			"location": "Parker Hall 319"
+		}]
+	},
+	{
+	"crn": "8675",
+	"section": "309",
+	"prof": "Tommy Tutone",
+	"times": 
+		[{
+			"type": "lecture",
+			"days": "MWF",
+			"time": "10:00-10:50",
+			"location": "Parker Hall 319"
+		},
+		{
+			"type": "lab",
+			"days": "M",
+			"time": "12:00pm-2:50pm",
+			"location": "Parker Hall 000"
+		}]
+	}];
+
+
+Updated HTML for the page to include multiple lines in a table. Note the rowspan="2" in the <td> tag. This causes the row to take up more height to indicate connected classes, such as classes with disparate meeting times or lecture and lab classes.
+<tbody id="CSCI-UA-101"><tr class="info"><td colspan="6"><i class="icon-trash icon-large"></i> &nbsp; <strong>CSCI-UA-101: Intro to Computer Science</strong></td></tr><tr class="tableHead"><th></th><th>Class#</th><th>Building</th><th>Professor</th><th>Days</th><th>Time</th></tr><tr class="success"><td rowspan="3"><i class="icon-remove"></i></td><td>8909</td><td>CIWW</td><td>Case, Andrew</td><td>T/R</td><td>11:00 - 12:00</td></tr><tr class=""><td><i class="icon-share-alt icon-flip-vertical text-right"></i> Lab</td><td>CIWW</td><td>Berger, Marsha</td><td>T/R</td><td>9:30-10:45</td></tr><tr class=""><td><i class="icon-share-alt icon-flip-vertical text-right"></i> Lab</td><td>CIWW</td><td>Berger, Marsha</td><td>T/R</td><td>9:30-10:45</td></tr></tbody>
+
+When adding a duplicate class, it adds a second empty table. Maybe I should just have it delete any existing matching tables, and then rebuild it.
+
+
+For times: display in tables as standard time, in drawing use string search regex: /am/ or /pm/ in each part after it's been split by "-", if pm add 12 to time to offset it properly.
+
+For each class row, the <tr> gets id= the crn of the class, so that we can select all matching CRNs in the table to grab labs, recitations, etc.
+
+Current variable for drawing is fine, extra times will just draw from the extra rows.
+
+To select the linked rows, just check for the data-crn attribute of the clicked row and hilight all matched rows in jQuery. 
+
+
+BeautifulSoup notes:
+
+
+If time is "TBA" or if schedule type is "Distance Learning" or "Independent Study" then we should skip that whole section 
+
+Switch BS for ElementTree? Seems to be more supported now
+
+For MySQL Adder, User: CourseLogicAdder and Pass: RcXm2aLVQmsVW8EJ
+
+Example SQL Query to add classes:
+INSERT INTO  `CourseLogic`.`ClassOptions` (
+`crn` ,
+`classID` ,
+`prof` ,
+`times`
+)
+VALUES (
+'999',  'TEST-123',  'Literally Hitler',  '[{"type":"Lecture","days":"MWF","time":"10:00am - 10:50am","location":"Parker Hall 319"},{"type":"Lab","days":"M","time":"12:00pm - 2:50pm","location":"Parker Hall 104"}]'
+);
+
+Or multiple:
+INSERT INTO  `CourseLogic`.`ClassOptions` (
+`crn` ,
+`classID` ,
+`prof` ,
+`times`
+)
+VALUES (
+'999',  'TEST-123',  'Literally Hitler',  '[{"type":"Lecture","days":"MWF","time":"10:00am - 10:50am","location":"Parker Hall 319"},{"type":"Lab","days":"M","time":"12:00pm - 2:50pm","location":"Parker Hall 104"}]'
+), (
+'666',  'HELL-101',  'Damien',  'All the time'
+);
+
+RAW SQL: INSERT INTO `CourseLogic`.`ClassOptions` (`crn`, `classID`, `prof`, `times`) VALUES ('999', 'TEST-123', 'Literally Hitler', '[{"type":"Lecture","days":"MWF","time":"10:00am - 10:50am","location":"Parker Hall 319"},{"type":"Lab","days":"M","time":"12:00pm - 2:50pm","location":"Parker Hall 104"}]'), ('666', 'HELL-101', 'Damien', 'All the time');

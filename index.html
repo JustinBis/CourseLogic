@@ -71,42 +71,46 @@
 			<div class="span7" id="classes">
 
 				<!-- Begin Class Listings -->
-				<div>
+				<div id="exampleTable">
 					<table class="table table-bordered">
-						<tbody id="EXAMP-UA-101">
+						<tbody id="EXAMP-101">
 							<tr class="info">
 								<td colspan="6"><i class="icon-trash icon-large"></i> &nbsp; <strong>EXAMPLE-101: An Example Class (Add your own above)</strong></td>
 							</tr>
 							<tr class="tableHead">
 								<th></th>
-								<th>Class#</th>
-								<th>Building</th>
+								<th>CRN</th>
 								<th>Professor</th>
 								<th>Days</th>
 								<th>Time</th>
 							</tr>
-							<tr>
+							<tr data-crn="000">
 								<td><i class="icon-remove"></i></td>
-								<td>0000</td>
-								<td>HERE</td>
+								<td>000</td>
 								<td>Professor Someone</td>
-								<td>M/W</td>
-								<td>8:00 - 9:45</tr>
+								<td>MW</td>
+								<td>8:00am - 9:45am</tr>
 							</tr>
-							<tr class="success">
+							<tr data-crn="0000" class="success">
 								<td><i class="icon-remove"></i></td>
 								<td>0000</td>
-								<td>THERE</td>
 								<td>Professor Else</td>
-								<td>T/R</td>
-								<td>11:00 - 12:45</tr>
+								<td>TR</td>
+								<td>11:00am - 12:45pm</tr>
 							</tr>
 						</tbody>				
 					</table>
 				</div>
 
 			</div><!-- /class listings -->
+
+		<div class="span7 text-center" id="loadingTable" style="display: none;">
+			<span><i class="icon-spinner icon-spin icon-large"></i> Loading Class Table...</span>
 		</div>
+
+		</div><!-- /row -->
+
+		
 
     </div> <!-- /container /home -->
 
@@ -117,6 +121,7 @@
 			<h3>Select a Class to Add</h3>
 		</div>
 		<div class="modal-body">
+			<h4 class="text-center" id="selectTopicLoading"><i class="icon-spinner icon-spin icon-large"></i> Loading Options...</h4>
 			<select class="fillModal" id="classTopicSelect">
 			</select>
 		</div>
@@ -133,6 +138,7 @@
 			<h3>Select a Class Subject</h3>
 		</div>
 		<div class="modal-body">
+		<h4 class="text-center" id="selectSubjectsLoading"><i class="icon-spinner icon-spin icon-large"></i> Loading Options...</h4>
 			<select class="fillModal" id="classSubjectSelect">
 			</select>
 		</div>

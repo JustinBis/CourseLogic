@@ -53,6 +53,10 @@ http.createServer(function (request, response) {
 		});
 	}
 	else if(path == "/classes"){
+		/*response.writeHead(200, successHeader);
+		response.write(JSON.stringify(exampleJson));
+		response.end();*/
+		
 		database.getClasses(requestData.classID, function(rows){
 			if(rows){
 				response.writeHead(200, successHeader);
@@ -89,29 +93,48 @@ var sendDatabaseResponse = function(response, rows){
 
 
 
-var exampleJson = {
-	"classid": "CSCI-UA-102",
-	"classname": "Intro to Computer Science 2",
-	"classes":
-	[{
-		"classnum": "999",
-		"build": "SOME",
-		"prof": "Dumbledore",
-		"days": "S/S",
-		"time": "10:00 - 11:45"
+var exampleJson = [{
+	"crn": "11126",
+	"prof": "Teck G. Lee",
+	"times": 
+		[{
+			"type": "Lecture",
+			"days": "MWF",
+			"time": "10:00am - 10:50am",
+			"location": "Parker Hall 319"
+		},
+		{
+			"type": "Lab",
+			"days": "M",
+			"time": "12:00pm - 2:50pm",
+			"location": "Parker Hall 104"
+		}]
 	},
 	{
-		"classnum": "888",
-		"build": "SOME",
-		"prof": "Professor Snape",
-		"days": "S/S",
-		"time": "10:00 - 11:45"
+	"crn": "123",
+	"prof": "Dumbledore",
+	"times": 
+		[{
+			"type": "Lecture",
+			"days": "TR",
+			"time": "11:00am - 12:15pm",
+			"location": "Parker Hall 319"
+		}]
 	},
 	{
-		"classnum": "777",
-		"build": "SOME",
-		"prof": "Professor Moody",
-		"days": "S/S",
-		"time": "10:00 - 11:45"
-	}]
-}
+	"crn": "8675",
+	"prof": "Tommy Tutone",
+	"times": 
+		[{
+			"type": "Lecture",
+			"days": "MWF",
+			"time": "10:00am - 10:50am",
+			"location": "Parker Hall 319"
+		},
+		{
+			"type": "Lab",
+			"days": "M",
+			"time": "12:00pm - 2:50pm",
+			"location": "Parker Hall 000"
+		}]
+	}];
