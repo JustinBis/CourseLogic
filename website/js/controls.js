@@ -110,7 +110,7 @@ var appendTable = function(tableTitle, classID, rows){
 **/
 var processClassData = function(className, classID, rows){
 	// First, remove existing class table if it already exists.
-	$('#'+classID).remove()
+	$('#'+classID).parent().parent().remove()
 	updateSelections();
 
 	// Create the needed outer HTML and append it

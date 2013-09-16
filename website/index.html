@@ -9,7 +9,7 @@
 
     <!-- styles -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="css/customstyles.css"
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -17,12 +17,6 @@
       <script src="js/html5shiv.js"></script>
     <![endif]-->
 
-    <!-- Fav and touch icons -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="ico/apple-touch-icon-114-precomposed.png">
-      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="ico/apple-touch-icon-72-precomposed.png">
-                    <link rel="apple-touch-icon-precomposed" href="ico/apple-touch-icon-57-precomposed.png">
-                                   <link rel="shortcut icon" href="ico/favicon.png">
   </head>
   <body>
   
@@ -60,115 +54,57 @@
 
 		<div class="row"><div class="span12">&nbsp;</div></div> <!-- Needed as a spacer for God knows why -->
 
-		<!-- Begin Visual Canvas
+		<!-- Begin Visual Canvas -->
 		<div class="row pull-right">
-			<canvas id="visual" width="350" height="450">
+			<canvas id="visual" width="350" height="600">
 				<strong>Your browser doesn't support Canvas elements.</strong>
 			</canvas>
-		</div>-->
-
-		<!-- Begin Visual Table -->
-		<div class="row" id="visual">
-			<div class="span4" data-spy="affix" data-offset-top="0">
-				<table class="table table-bordered">
-					<thead>
-						<tr class="visual"><th colspan="6" style="text-align: center;">Visual</th></tr>
-						<tr>
-							<th>Time</th>
-							<th>Monday</th>
-							<th>Tuesday</th>
-							<th>Wednesday</th>
-							<th>Thursday</th>
-							<th>Friday</th>
-						</tr>
-					</thead>
-					
-					<tbody>
-						<tr>
-							<th>8:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>9:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>10:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>11:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>12:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>1:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>2:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>3:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>4:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-						<tr>
-							<th>5:00</th>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></tr>
-						</tr>
-					</tbody>				
-				</table>
-			</div>
 		</div>
-		<!-- /visual -->
+
+		<div class="row">
+			<div class="span7" id="classes">
+
+				<!-- Begin Class Listings -->
+				<div id="exampleTable">
+					<table class="table table-bordered">
+						<tbody id="EXAMP-101">
+							<tr class="info">
+								<td colspan="6"><i class="icon-trash icon-large"></i> &nbsp; <strong>EXAMPLE-101: An Example Class (Add your own above)</strong></td>
+							</tr>
+							<tr class="tableHead">
+								<th></th>
+								<th>CRN</th>
+								<th>Professor</th>
+								<th>Days</th>
+								<th>Time</th>
+							</tr>
+							<tr data-crn="000">
+								<td><i class="icon-remove"></i></td>
+								<td>000</td>
+								<td>Professor Someone</td>
+								<td>MW</td>
+								<td>8:00am - 9:45am</tr>
+							</tr>
+							<tr data-crn="0000" class="success">
+								<td><i class="icon-remove"></i></td>
+								<td>0000</td>
+								<td>Professor Else</td>
+								<td>TR</td>
+								<td>11:00am - 12:45pm</tr>
+							</tr>
+						</tbody>				
+					</table>
+				</div>
+
+			</div><!-- /class listings -->
+
+		<div class="span7 text-center" id="loadingTable" style="display: none;">
+			<span><i class="icon-spinner icon-spin icon-large"></i> Loading Class Table...</span>
+		</div>
+
+		</div><!-- /row -->
+
+		
 
     </div> <!-- /container /home -->
 
@@ -179,6 +115,7 @@
 			<h3>Select a Class to Add</h3>
 		</div>
 		<div class="modal-body">
+			<h4 class="text-center" id="selectTopicLoading"><i class="icon-spinner icon-spin icon-large"></i> Loading Options...</h4>
 			<select class="fillModal" id="classTopicSelect">
 			</select>
 		</div>
@@ -195,6 +132,7 @@
 			<h3>Select a Class Subject</h3>
 		</div>
 		<div class="modal-body">
+		<h4 class="text-center" id="selectSubjectsLoading"><i class="icon-spinner icon-spin icon-large"></i> Loading Options...</h4>
 			<select class="fillModal" id="classSubjectSelect">
 			</select>
 		</div>
@@ -204,13 +142,13 @@
 		</div>
 	</div>
 
-	<!-- Local Javascript -->
+    <!-- Hosted CDN scripts -->
+
+    <!-- Local Javascript -->
     <script src="js/jquery-1.10.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="controls.js"></script>
-    <script src="visual.js"></script>
-
-    <!-- Hosted CDN scripts -->
+    <script src="js/controls.js"></script>
+    <script src="js/visual.js"></script>
 
   </body>
 </html>

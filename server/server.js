@@ -20,7 +20,7 @@ var successHeader = {'Content-Type': 'application/json', 'Access-Control-Allow-O
 	Create a static fileserver for the frontend pages on port 80 (standard HTTP)
 **/
 connect.createServer(
-    connect.static('../')
+    connect.static('../website/')
 ).listen(80);
 
 console.log('CourseLogic Front-End connect webserver running at http://127.0.0.1:80');
