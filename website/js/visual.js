@@ -1,13 +1,47 @@
+/**
+	These constants define the earliest and latest hours the schedule canvas will scroll to, in 24-hour format
+ **/
+var EARLIEST_SCHEDULE_TIME = 6; // 6 A.M.
+var LATEST_SCHEDULE_TIME = 22; // 10 P.M.
+/**
+	This constant defines what time to start the canvas at
+**/
+var START_SCHEDULE_TIME = 8; // 8 A.M.
+
 var canvas = document.getElementById('visual');
-if(canvas.getContext)
+// Setup the canvas context
+if(canvas.getContext){
 	var context = canvas.getContext('2d');
+	context.textAlign = "center";
+	context.textBaseline = "middle";
+}
 
 var rowHeight = 50; // Height of each drawn row in pixels
 var dayWidth = 60; // Width of each day's column
 var timesColWidth = 50; // Width of the times col
-var firstHour = 8; // The first drawn hour on the table
 
-var times = [8, 9, 10, 11, 12, 1, 2, 3, 4, 5];
+/**
+	Variable to keep track of the y-offset that comes from dragging the canvas
+	Classes and times will be offset by this so we can draw more in a smaller space.
+**/
+// Initalize the offset so the schedule starts with the time from START_SCHEDULE_TIME
+var dragYOffset = (EARLIEST_SCHEDULE_TIME - START_SCHEDULE_TIME)*rowHeight;
+
+// Find the minimum and maximum transforrmation offsets we can have before we're beyond the
+// times allowed by the EARLIEST_SCHEDULE_TIME and LATEST_SCHEDULE_TIME constants
+// Remember, all the offsets are in the negatives with canvas since we're shifitng it up
+var maxYOffset = (EARLIEST_SCHEDULE_TIME - START_SCHEDULE_TIME)*rowHeight + 2*rowHeight; // Add the 2*rowHeight ot account for the two extra top rows
+
+// The maximum amount of downward scrolling would be the to the last schedule time + 1 (so we show the whole hour and not just the start)
+// minus the start time and minus the amount of time that can be shown at once on the canvas.
+// This is equal to the number of rows down we can before reaching the defined end.
+// However, we also have to add the two extra top header rows, and then negate the whole thing as this is a transformation
+var minYOffset = -1*((LATEST_SCHEDULE_TIME+1 - START_SCHEDULE_TIME - (context.canvas.height/rowHeight - 2))*rowHeight + 2*rowHeight);
+
+/**
+	A list of the days to print to the header row.
+	Its length is also used to know how many class columns there should be.
+**/
 var days = ['Mon.', 'Tues.', 'Wed.', 'Thurs.', 'Fri.'];
 
 var selectedSections = [
@@ -22,6 +56,45 @@ function drawBase(){
 	// Clear the canvas for a redraw
 	context.clearRect(0, 0, canvas.width, canvas.height);
 
+	// Set up the line style
+	context.lineWidth = 0.5;
+	context.strokeStyle = "#ddd";
+
+	// Row lines will be affected by the dragYOffset as well
+	// Save the context so we can undo all translations easily at the end of this function
+	context.save();
+
+	context.translate(0,dragYOffset%rowHeight);
+
+	// Draw Row Lines
+	context.beginPath();
+	// Draw lines starting at the bottom of the second row all the way until we hit the canvas height
+	for (var i = 1; i<=context.canvas.height/rowHeight; i++){
+		var y = (i+1)*rowHeight
+		context.moveTo(0, y);
+		context.lineTo(context.canvas.width, y);
+		context.stroke();
+	}
+
+	// Restore the context so everything else draws normally
+	context.restore();
+
+	// Draw Col Lines
+	context.beginPath();
+	var start = timesColWidth // Offset to first line
+	// Draw a col line for every day of the week shown
+	for (var i = 0; i<days.length; i++){
+		var x = start+i*dayWidth;
+		context.moveTo(x, rowHeight);
+		context.lineTo(x, context.canvas.height);
+		context.stroke();
+	}
+}
+
+/**
+	Draws a title header to the top row along with a background that matches the tables' headers
+**/
+function drawHeader(){
 	// Draw the header
 	context.fillStyle = "#d9edf7"; // Matches the bootstrap .info color
 	context.fillRect(0,0,350,rowHeight);
@@ -29,37 +102,24 @@ function drawBase(){
 	// Draw text on to the header
 	context.fillStyle = "rgb(51,51,51)"; // Matches the bootstrap black
 	context.font = "20pt Helvetica bold";
-	context.textAlign = "center";
-	context.textBaseline = "middle";
 	context.fillText("Visual", context.canvas.width/2, rowHeight/2); // Fill Text to the center
+}
 
-
-	// Draw Row Lines
-	context.lineWidth = 0.5;
-	context.strokeStyle = "#ddd";
-	context.beginPath();
-	for (var i = 1; i<=times.length; i++){
-		var y = (i+1)*rowHeight
-		context.moveTo(0, y);
-		context.lineTo(context.canvas.width, y);
-		context.stroke();
-	}
-
-	// Draw Col Lines
-	context.beginPath();
-	var start = timesColWidth // Offset to first line
-	for (var i = 0; i<5; i++){
-		var x = start+i*dayWidth;
-		context.moveTo(x, rowHeight);
-		context.lineTo(x, context.canvas.height);
-		context.stroke();
-	}
-
-	// Draw Times Header Backdrop
-	context.fillStyle = "rgba(20, 180, 50, 0.5)";
-	context.fillRect(0, rowHeight, timesColWidth, context.canvas.height);
+/**
+	Draws the days of the week to the second row along with a background
+**/
+function drawDayOverlay(){
 	// Draw Days Header Backgdrop
-	context.fillRect(0, rowHeight, context.canvas.width, rowHeight);
+
+	/* Doesn't actually look very good, maybe tweak it later
+	// Create linear gradient
+	var gradient = context.createLinearGradient(0, rowHeight, 0, rowHeight*2);
+	gradient.addColorStop(0, 'rgba(20, 180, 50, 1)');   
+	gradient.addColorStop(1, 'rgba(20, 180, 50, 0.5)');
+	context.fillStyle = gradient;
+	*/
+	context.fillStyle = "rgba(20, 180, 50, 0.5)";
+	context.fillRect(timesColWidth, rowHeight, context.canvas.width, rowHeight);
 
 	// Draw Days
 	context.font = "14pt Helvetica bold";
@@ -67,18 +127,50 @@ function drawBase(){
 	for (var i = 1; i<=days.length; i++){
 		context.fillText(days[i-1], timesColWidth+(i*dayWidth)-(dayWidth/2), rowHeight+rowHeight/2);
 	}
+}
+
+/**
+	Function to draw the days and times over the classes and backrgound already drawn to the canvas 
+**/
+function drawTimeOverlay(){
+	// Draw Times Verticle Backdrop
+	context.fillStyle = "rgba(20, 180, 50, 0.5)";
+	context.fillRect(0, rowHeight, timesColWidth, context.canvas.height);
+
+	// Save the context so we can undo all translations easily at the end of this function
+	context.save();
+
+	context.translate(0,dragYOffset);
 
 	// Draw Times
+	context.font = "14pt Helvetica bold";
+	context.fillStyle = "rgb(51,51,51)";
 	var base = rowHeight*2 // Space before first time
-	for (var i = 0; i<times.length; i++){
-		context.fillText(times[i].toString()+":00", 25, base+(rowHeight/2)+i*rowHeight);
+
+	for (var i = 0; i <= LATEST_SCHEDULE_TIME - EARLIEST_SCHEDULE_TIME; i++){
+		yLocation = base+(rowHeight/2)+i*rowHeight
+
+		// Covert from the i-th index to a time string by using a modulus to wrap around the 12:00 point
+		timeString = ((i+EARLIEST_SCHEDULE_TIME)%12).toString()+":00"
+
+		// Handle noon being displayed improperly due to the modulus above
+		if(timeString == "0:00")
+			timeString = "12:00";
+		context.fillText(timeString, 25, yLocation);
 	}
+
+	// Finally, restore the context so everything else draws normally
+	context.restore();
 }
 
 /**
 	Reads from the passed in list of classes 
 **/
 function drawClasses(classList){
+	// Save the context so we can undo all translations easily at the end of this function
+	context.save();
+	context.translate(0,dragYOffset);
+
 	for (var i = 0; i<classList.length; i++)
 	{
 		// Assign the current working class section to a variable
@@ -91,13 +183,15 @@ function drawClasses(classList){
 
 		// Calculate the start time offset to use for box placement
 		// Normally, we will need to shift the box up 8 hours, since we don't draw earlier than 8 AM as no classes occur any earlier
-		var startOffset = -8;
+		/*var startOffset = -8;
 		if(section.startTime[0]<=7)
 			startOffset = 4;
 
 		var endOffset = -8
 		if(section.endTime[0]<=7)
-			endOffset = 4;
+			endOffset = 4;*/
+		var startOffset = -EARLIEST_SCHEDULE_TIME;
+		var endOffset = startOffset;
 
 		// Find top and bottom bounds for the box
 		var top = rowHeight*2 + (section.startTime[0]+startOffset)*rowHeight; //TODO: Account for after noon
@@ -128,6 +222,9 @@ function drawClasses(classList){
 		}
 
 	}
+
+	// Finally, restore the context so everything else draws normally
+	context.restore();
 }
 
 /**
@@ -206,11 +303,16 @@ function parseTime(inputTime){
 }
 
 /**
-	A function to update the visual from the global variables
+	A function to call all drawing functions in the proper order to update the visual
 **/
 function updateVisual(){
 	drawBase();
 	drawClasses(selectedSections);
+	drawTimeOverlay();
+	// Draw the day overlay after the classes so that it shows up above them and the transparency reveals classes behind it
+	drawDayOverlay();
+	// Draw the header last to hide everything behind it
+	drawHeader();
 }
 
 // Will execute once the script is loaded. So long as the script is loaded after the canvas is created, we're good.

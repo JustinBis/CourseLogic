@@ -1,7 +1,7 @@
 /////////////////////
 // USER SET VARIABLES
 /////////////////////
-var host = "localhost:8088"; // Maps to the API host
+var APIhost = "localhost:8088"; // Maps to the API host
 
 /**
 	Activate bootstrap tooltips to show users how to use the site
@@ -192,7 +192,7 @@ var toggleRowSelect = function(element){
 var subjectsFetched = false; // So we only make a subject request once
 $('#selectSubject').on('show', function(){
 	if(!subjectsFetched){
-		$.getJSON('http://'+host+'/subjects', function(data) {
+		$.getJSON('http://'+APIhost+'/subjects', function(data) {
 			$.each(data, function(){
 				$('#classSubjectSelect').append('<option data-index="'+(this.subjectID)+'">'+this.subjectID+': '+this.subjectName+'</option>');
 			});
@@ -218,7 +218,7 @@ $('#selectTopic').on('show', function(){
 	var subjectID = $('#classSubjectSelect option:selected').attr('data-index');
 	// Show the loading text
 	$('#selectTopicLoading').show();
-	$.getJSON('http://'+host+'/topics?subjectID='+subjectID, function(data) {
+	$.getJSON('http://'+APIhost+'/topics?subjectID='+subjectID, function(data) {
 		$.each(data, function(){
 			$('#classTopicSelect').append('<option data-index="'+this.classID+'">'+this.classID+': '+this.className+'</option>');
 		});
@@ -238,7 +238,7 @@ $('#modalAddClassesButton').click(function(){
 	$('#loadingTable').show()
 
 	// Request the classes and then make a table
-	$.getJSON('http://'+host+'/classes?classID='+classID, function(data){
+	$.getJSON('http://'+APIhost+'/classes?classID='+classID, function(data){
 		processClassData(className, classID, data);
 		$('#loadingTable').hide();
 	});
@@ -252,4 +252,55 @@ $('#modalAddClassesButton').click(function(){
 **/
 $('#selectTopic').on('hidden', function(){
 	$('#classTopicSelect').empty();
+});
+
+/**
+	Attach a listener to the visual so that it can detect when it's being dragged
+	Also attach a listener to the body so we can deactivate the mousemove listener one the mouse button has been released
+**/
+$('#visual').mousedown(function(){
+	previousPageY = null; // Used for tracking in the mouseMoveHandler
+	$('#visual').mousemove(mouseMoveHandler);
+});
+// Note: binding this to the body can break some other extensions that rely on mouseup listeners.
+// However, it's best to bind this to the body so we don't have to deal with mouseup happening outside of the visual and it not being caught
+$(document).mouseup(function(){
+	$('#visual').unbind("mousemove", mouseMoveHandler);
+});
+
+var mouseMoveHandler = function(e) {
+	console.log(previousPageY);
+	if(previousPageY){
+		// Only update dragYOffset if it won't fall out of the allowed range
+		if( (dragYOffset + e.pageY - previousPageY) >= minYOffset && (dragYOffset + e.pageY - previousPageY) <= maxYOffset){
+			dragYOffset += e.pageY - previousPageY;
+			updateVisual();
+		}
+		previousPageY = e.pageY;
+	}
+	else{
+		previousPageY = e.pageY;
+	}
+}
+
+/**
+	Attach a listener to the visual for mousewheel scrolling so that works too.
+	Note: requires a 3rd party jQuery library (https://github.com/brandonaaron/jquery-mousewheel)
+**/
+$('#visual').bind('mousewheel', function(event, delta, deltaX, deltaY) {
+	// Normally I would stop the event propogation here so that the page doesn't continue scrolling,
+	// but this is a custom event, as the mouse wheel event is a very fractured web standard.
+
+	// Each scroll 'click' is a single deltaY, so let's scale it:
+	change = deltaY*25;
+
+    if( (dragYOffset + change) >= minYOffset && (dragYOffset + change) <= maxYOffset){
+		dragYOffset += change;
+		updateVisual();
+	}
+	// If we're trying to scroll out of range, just set it to the limit
+	else if((dragYOffset + change) < minYOffset)
+		dragYOffset = minYOffset;
+	else if((dragYOffset + change) > maxYOffset)
+		dragYOffset = maxYOffset;
 });
