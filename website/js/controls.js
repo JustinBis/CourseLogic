@@ -1,7 +1,9 @@
 /////////////////////
 // USER SET VARIABLES
 /////////////////////
-var APIhost = "localhost:8088"; // Maps to the API host
+//var APIhost = "localhost:8088"; // Maps to the API host
+var APIhost = "courselogic-api.herokuapp.com"; // Maps to the API host
+
 
 /**
 	Activate bootstrap tooltips to show users how to use the site
