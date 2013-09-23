@@ -3,6 +3,10 @@
 /////////////////////
 var host = "localhost:8088"; // Maps to the API host
 
+/**
+	Activate bootstrap tooltips to show users how to use the site
+**/
+$("[data-toggle='tooltip']").tooltip()
 
 /**
 	Attaches a click handler to the trash icons that works even when new tables are added.
@@ -47,6 +51,32 @@ $('#classes').on('click', 'tr', function(){
 	updateSelections();
 });
 
+/**
+	Attaches a click handler to the dropdown icons in the table headers
+**/
+$('#classes').on('click', '.icon-circle-arrow-down', function(){
+	// Save the icon element reference for later
+	icon = $(this);
+	// If the icon is already rotated and was then clicked, slide the table back down
+	if(icon.hasClass("icon-rotate-90")){
+		// Show all the siblings of the info row. I would use .slideDown, but it doesn't work on tables
+		// Note that siblings() excludes the selected row, which is good for us
+		$(this).parent().parent().siblings().show(400, function(){
+		
+		});
+		// Rotate the icon once the table has rolled down
+		icon.removeClass("icon-rotate-90");
+	}
+	else{
+		$(this).parent().parent().siblings().hide(400, function(){
+			
+		});
+		// Rotate the icon once the table has been hidden up
+		icon.addClass("icon-rotate-90")
+	}
+});
+
+
 
 /**
 	Function to create the outside structure of a class table
@@ -56,7 +86,7 @@ var createOuterTableHTML = function(tableTitle, classID){
 	s += classID
 	s += '"><tr class="info"><td colspan="5"><i class="icon-trash icon-large"></i> &nbsp; <strong>'
 	s += tableTitle
-	s += '</strong></td></tr><tr class="tableHead"><th></th><th>CRN</th><th>Professor</th><th>Days</th><th>Time</th></tr></tbody></table></div>'
+	s += '</strong><i class="icon-circle-arrow-down icon-large pull-right"></i></td></tr><tr class="tableHead"><th></th><th>CRN</th><th>Professor</th><th>Days</th><th>Time</th></tr></tbody></table></div>'
 	return s
 }
 
@@ -77,18 +107,32 @@ var createClassRowHTML = function(crn, professor, times){
 			s += crn;
 		else
 			s += '<tr data-crn="'+crn+'"><td><i class="icon-share-alt icon-flip-vertical"></i> '+this.type;
-		
-		i++; // Iterate so the previous check will show a connected row if there are more than one time
 
 		s += '</td><td>';
-		s += professor;
+
+		if (i==0){
+			s += professor;
+			s += createRateMyProfessorIcon(professor)
+		}
+		else
+			s += " "
+
 		s += '</td><td>';
 		s += this.days;
 		s += '</td><td>';
 		s += this.time;
 		s += '</td></tr>';
+		i++; // Iterate so the previous check will show a connected row if there are more than one time
 	});
 	// Return the complete string
+	return s;
+}
+
+var createRateMyProfessorIcon = function(professor){
+	var s = '&nbsp;&nbsp;<a href="https://www.google.com/search?q=';
+	s += professor.replace(" ", "+");
+	s += '+Auburn+University+Rate+My+Professors" target="_blank">';
+	s += '<i class="icon-question-sign"></i>';
 	return s;
 }
 
@@ -150,7 +194,7 @@ $('#selectSubject').on('show', function(){
 	if(!subjectsFetched){
 		$.getJSON('http://'+host+'/subjects', function(data) {
 			$.each(data, function(){
-				$('#classSubjectSelect').append('<option data-index="'+(this.subjectID)+'">'+this.subjectCode+': '+this.subjectName+'</option>');
+				$('#classSubjectSelect').append('<option data-index="'+(this.subjectID)+'">'+this.subjectID+': '+this.subjectName+'</option>');
 			});
 			$('#selectSubjectsLoading').slideUp(400);
 			subjectsFetched = true;

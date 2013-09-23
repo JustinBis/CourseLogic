@@ -218,12 +218,11 @@ pip-log.txt
 # CUSTOM
 ###########
 
-img/
 css/bootstrap.css
 js/bootstrap.js
-font-awesome/scss
-font-awesome/less
 font-awesome/css/font-awesome.css
 font-awesome/css/font-awesome-ie7.css
 node/
 server/node_modules
+scraper/scrapedClasses.json
+scraper/scrapedSubjects.json

@@ -23,9 +23,13 @@ var pool = mysql.createPool({
 function getSubjects(callback){
 	// Create a new connection from the pool and query for info
 	pool.getConnection(function(err, connection){
-		if (err) logError(err);
+		if (err){
+			logError(err);
+			callback(null); // Return null to the callback so that it will send a HTTP error to the client
+			return false; // Prevent the program from moving on
+		}
 		
-		connection.query('SELECT * FROM `Subjects` WHERE `hasClasses` = 1', function(err, rows){
+		connection.query('SELECT * FROM `Subjects` ORDER BY `Subjects`.`subjectID` ASC', function(err, rows){
 			if(err){
 				console.log("\nError on call of getSubjects()");
 				logError(err);
@@ -39,9 +43,13 @@ function getSubjects(callback){
 function getTopics(subjectID, callback){
 	// Create a new connection from the pool and query for info
 	pool.getConnection(function(error, connection){
-		if(error) console.log(error);
+		if(error){
+			console.log(error);
+			callback(null); // Return null to the callback so that it will send a HTTP error to the client
+			return false; // Prevent the program from moving on
+		}
 
-		connection.query('SELECT * FROM `ClassTopics` WHERE `subjectID` = ? AND `hasClasses` = 1', subjectID, function(err, rows){
+		connection.query('SELECT * FROM `ClassTopics` WHERE `subjectID` = ? ORDER BY `ClassTopics`.`classID` ASC', subjectID, function(err, rows){
 			if(err){
 				console.log("\nError on call of getTopics() with subjectID: "+subjectID);
 				logError(err);
@@ -55,9 +63,13 @@ function getTopics(subjectID, callback){
 function getClasses(classID, callback){
 	// Create a new connection from the pool and query for info
 	pool.getConnection(function(error, connection){
-		if(error) console.log(error);
+		if(error){
+			console.log(error);
+			callback(null); // Return null to the callback so that it will send a HTTP error to the client
+			return false; // Prevent the program from moving on
+		}
 
-		connection.query('SELECT * FROM `ClassOptions` WHERE `classID` = ?', classID, function(err, rows){
+		connection.query('SELECT * FROM `ClassOptions` WHERE `classID` = ? ORDER BY `ClassOptions`.`crn` ASC', classID, function(err, rows){
 			if(err){
 				console.log("\nError on call of getClasses() with classID: "+classID);
 				logError(err);

@@ -34,39 +34,17 @@ http.createServer(function (request, response) {
 	// Match the request to a dababase function
 	if(path == "/subjects"){
 		database.getSubjects(function(rows){
-			response.writeHead(200, successHeader);
-			response.write(JSON.stringify(rows));
-			response.end();
+			sendResponse(response, rows);
 		});
 	}
 	else if(path == "/topics"){
 		database.getTopics(requestData.subjectID, function(rows){
-			if(rows){
-				response.writeHead(200, successHeader);
-				response.write(JSON.stringify(rows));
-				response.end();
-			}
-			else{
-				response.writeHead(400);
-				response.end();
-			}
+			sendResponse(response, rows);
 		});
 	}
 	else if(path == "/classes"){
-		/*response.writeHead(200, successHeader);
-		response.write(JSON.stringify(exampleJson));
-		response.end();*/
-		
 		database.getClasses(requestData.classID, function(rows){
-			if(rows){
-				response.writeHead(200, successHeader);
-				response.write(JSON.stringify(rows));
-				response.end();
-			}
-			else{
-				response.writeHead(400);
-				response.end();
-			}
+			sendResponse(response, rows);
 		});
 	}
 
@@ -77,64 +55,15 @@ console.log('CourseLogic Back-End http webserver running at http://127.0.0.1:'+A
 /**
 	Takes in an http reponse object and rows from the database and then sends the response back to the client.	
 **/
-var sendDatabaseResponse = function(response, rows){
+var sendResponse = function(response, rows){
 	if(rows){
 		response.writeHead(200, successHeader);
 		response.write(JSON.stringify(rows));
 		response.end();
 	}
 	else{
-		response.writeHead(400);
+		response.writeHead(500);
+		response.write("Internal Database Error. Either your request was malformed or MySQL is acting up as usual. Sorry!")
 		response.end();
 	}
 }
-
-
-
-
-
-var exampleJson = [{
-	"crn": "11126",
-	"prof": "Teck G. Lee",
-	"times": 
-		[{
-			"type": "Lecture",
-			"days": "MWF",
-			"time": "10:00am - 10:50am",
-			"location": "Parker Hall 319"
-		},
-		{
-			"type": "Lab",
-			"days": "M",
-			"time": "12:00pm - 2:50pm",
-			"location": "Parker Hall 104"
-		}]
-	},
-	{
-	"crn": "123",
-	"prof": "Dumbledore",
-	"times": 
-		[{
-			"type": "Lecture",
-			"days": "TR",
-			"time": "11:00am - 12:15pm",
-			"location": "Parker Hall 319"
-		}]
-	},
-	{
-	"crn": "8675",
-	"prof": "Tommy Tutone",
-	"times": 
-		[{
-			"type": "Lecture",
-			"days": "MWF",
-			"time": "10:00am - 10:50am",
-			"location": "Parker Hall 319"
-		},
-		{
-			"type": "Lab",
-			"days": "M",
-			"time": "12:00pm - 2:50pm",
-			"location": "Parker Hall 000"
-		}]
-	}];

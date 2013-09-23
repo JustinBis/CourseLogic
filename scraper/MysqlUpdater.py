@@ -16,7 +16,8 @@
 ## USER VARIABLES ##
 ####################
 
-json_file = 'scraperOutput.json' # Filename for the JSON data
+classes_json_file = 'scrapedClasses.json' # Filename for the JSON data containing the class listings
+subjects_json_file = 'scrapedSubjects.json' # Filename for the JSON data containing the class listings
 
 db_config = {
    'user'     : 'CourseLogicAdder', #MySQL Username
@@ -39,16 +40,16 @@ from mysql.connector import errorcode
 
 # Main function to be run when this script is called directly
 def main():
-   # Open the json file listed in the settings above
-   jsonData = loadJSON(json_file)
    # Prompt the user, asking about what they want to do
    print("Welcome to the CourseLogic MySQL Updater")
-   print("Which table do you want to update:\n1. Class Options\n2. Subject Listings")
+   print("Which table do you want to update:\n1. Class Options\n2. Class Topics\n3. Subjects")
    response = raw_input("Enter a number: ")
    if response == "1":
-      updateClassOptions(jsonData)
+      updateClassOptions(loadJSON(classes_json_file))
    elif response == "2":
-      updateSubjects(jsonData)
+      updateClassTopics(loadJSON(classes_json_file))
+   elif response == "3":
+      updateSubjects(loadJSON(subjects_json_file))
    else:
       print("Well that's not an option. Way to go. Bye!")
 
@@ -60,6 +61,34 @@ def updateClassOptions(jsonData):
    # Interpret the data so that we can use it for the above MySQL statement
    formattedData = formatClassDataForMysql(jsonData)
 
+   # Run the MySQL statement
+   executeMysql(stmt, formattedData)
+
+
+# A function to update the ClassTopics table from the given scraped classes data
+def updateClassTopics(jsonData):
+   # The MySQL statement to use
+   stmt = "REPLACE INTO ClassTopics (subjectID, classID, className) VALUES (%s, %s, %s)"
+
+   # Interpret the data
+   formattedData = formatClassTopicDataForMysql(jsonData)
+
+   # Run the statement
+   executeMysql(stmt, formattedData)
+   
+
+# A function to update the Subjects table based on the given scraped subjects data.
+def updateSubjects(jsonData):
+   # The MySQL statement to use
+   stmt = "REPLACE INTO Subjects (subjectID, subjectName) VALUES (%s, %s)"
+
+   # Interpret the data
+   formattedData = formatSubjectDataForMysql(jsonData)
+
+   # Run the statement
+   executeMysql(stmt, formattedData)
+
+def executeMysql(stmt, formattedData):
    # Create a connection to the MySQL database
    if verbose_debug: print("Attempting to create a MySQL Connection")
    connection = createConnection(db_config)
@@ -71,7 +100,11 @@ def updateClassOptions(jsonData):
    # Using the statement and formatted data, exectute the MySQL statement
    # Note that using executemany() allows data to be given as an array of tuples
    print("Attempting to execute the SQL statement")
-   cursor.executemany(stmt, formattedData)
+   try: cursor.executemany(stmt, formattedData)
+   except mysql.Error as e:
+      print("Error executing the MySQL statement. Error was:")
+      print(e)
+   
    print(str(cursor.rowcount)+" rows will be affected.")
    
    # Prompt the user to make sure they want to commit the change
@@ -84,13 +117,7 @@ def updateClassOptions(jsonData):
       
    # Finally, close the connection
    connection.close()
-
-
-# A function to update the Subjects tables based on the given json data.
-def updateSubjects(jsonData):
-   pass
-
-
+   
 # Create a MySQL connection using the passed config dictionary
 # Returns a MySQL connection object
 def createConnection(config):
@@ -111,9 +138,10 @@ def loadJSON(data):
    jsonFile = open(data)
    jsonData = json.load(jsonFile)
    jsonFile.close()
+   print("Successfully loaded the JSON file")
    return jsonData
 
-# Function to interpret the passed class data into a list of tuples useable for MySQL
+# Function to interpret the passed class data dict into a list of tuples useable for MySQL
 def formatClassDataForMysql(data):
    # Create a list to store the data
    output = []
@@ -122,9 +150,42 @@ def formatClassDataForMysql(data):
    for key, value in data.iteritems():
       # Loop through each section in each course
       for crn, section in data[key]['sections'].iteritems():
-         # Create the tuple to match (%(crn)s, %(classID)s, %(prof)s, %(times)s) in the MySQL statement
+         # Create the tuple to match (crn, classID, prof, times) in the MySQL statement
          t = ( str(crn), str(key), str(section['prof']), json.dumps(section['times']) )
          output.append(t)
+
+   return output
+
+# Function to interpret the passed class data dict into a list of tuples
+def formatClassTopicDataForMysql(data):
+   # Create a list to store the data
+   output = []
+   length = 0
+   # Loop through each course, but only grab the classID and the className as that's all we need
+   for key, value in data.iteritems():
+      # Create the tuple to match (subjectID, classID, className) in the MySQL statement
+      subjectID = key.split("-")[0]
+      # Try to create the needed tuple. This might fail with non-ascii characters such as a french class
+      try:
+         t = ( str(subjectID), str(key), str(data[key]['className']) )
+      except UnicodeEncodeError as e:
+         if verbose_debug:
+            print("Error converting class data to strings. Class was: "+key+": "+data[key]['className'])
+      
+      output.append(t)
+
+   return output
+
+# Function to interpret the passed subject data dict into a list of tuples useable for MySQL
+def formatSubjectDataForMysql(data):
+   # Create a list to store the data
+   output = []
+
+   # Loop through each course, making sure to get it's key. (Won't work in Python 3.x thanks to .iteritems())
+   for key, value in data.iteritems():
+      # Create the tuple to match (subjectID, subjectName) in the MySQL statement
+      t = ( str(key), str(value) )
+      output.append(t)
 
    return output
    
