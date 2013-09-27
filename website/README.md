@@ -1,0 +1,1 @@
+Though not actually used in the deployed website, this folder contains a Nodejs file "webserver.js" that is a simple node-static webserver, in case you want to host the API seperately from the static pages.

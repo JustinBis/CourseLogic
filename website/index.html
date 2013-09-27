@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>CourseLogic Class Scheduler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="An organized and logical way to plan your courses!">
+    <meta name="author" content="Justin Bisignano">
+
+    <!-- styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/customstyles.css"
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+    <![endif]-->
+
+  </head>
+  <body>
+  
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">CourseLogic</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container" id="home">
+
+    	<div class="row">
+    		<div class="span12">
+    			<div class="alert alert-info">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<strong>Welcome!</strong> Get started by clicking around and adding some classes! Remember, this is a beta, so not everything is guarenteed to work.
+				</div>
+				<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#selectSubject"><i class="icon-plus"></i>&nbsp; Add a Class</button>
+			</div>
+		</div>
+
+		<div class="row"><div class="span12">&nbsp;</div></div> <!-- Needed as a spacer for God knows why -->
+
+		<!-- Begin Visual Canvas -->
+		<div class="row pull-right">
+			<canvas id="visual" width="350" height="600">
+				<strong>Your browser doesn't support Canvas elements.</strong>
+			</canvas>
+		</div>
+
+		<div class="row">
+			<div class="span7" id="classes">
+
+				<!-- Begin Class Listings -->
+				<div id="exampleTable">
+					<table class="table table-bordered">
+						<tbody id="EXAMP-101">
+							<tr class="info">
+								<td colspan="6"><i class="icon-trash icon-large"  data-toggle="tooltip" title="The trashcan removes an entire class"></i> &nbsp; <strong>EXAMPLE-101: An Example Class (Add your own above)</strong><i class="icon-circle-arrow-down icon-large pull-right" data-toggle="tooltip" title="Clicking this icon will minimize the table so extra classes aren't taking up space."></i></td>
+							</tr>
+							<tr class="tableHead">
+								<th></th>
+								<th>CRN</th>
+								<th>Professor</th>
+								<th>Days</th>
+								<th>Time</th>
+							</tr>
+							<tr data-crn="000">
+								<td><i class="icon-remove" data-toggle="tooltip" title="These icons remove a single row."></i></td>
+								<td>000</td>
+								<td>Professor Someone
+									<a href="#" data-toggle="tooltip" title="These icons link to the professor's RateMyProfessors page."><i class="icon-question-sign"></i></a>
+								</td>
+								<td>MW</td>
+								<td>8:00am - 9:45am</tr>
+							</tr>
+							<tr data-crn="0000" class="success">
+								<td><i class="icon-remove" data-toggle="tooltip" title="These icons remove the class row."></i></td>
+								<td>0000</td>
+								<td>Professor Else
+									<a href="#" data-toggle="tooltip" title="These icons link to the professor's RateMyProfessors page."><i class="icon-question-sign"></i></a>
+								</td>
+								<td>TR</td>
+								<td>11:00am - 12:45pm</tr>
+							</tr>
+						</tbody>				
+					</table>
+				</div>
+
+			</div><!-- /class listings -->
+
+		<div class="span7 text-center" id="loadingTable" style="display: none;">
+			<span><i class="icon-spinner icon-spin icon-large"></i> Loading Class Table...</span>
+		</div>
+
+		</div><!-- /row -->
+
+		
+
+    </div> <!-- /container /home -->
+
+    <!-- Modal for Add A Class -->
+	<div id="selectTopic" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>Select a Class to Add</h3>
+		</div>
+		<div class="modal-body">
+			<h4 class="text-center" id="selectTopicLoading"><i class="icon-spinner icon-spin icon-large"></i> Loading Options...</h4>
+			<select class="fillModal" id="classTopicSelect">
+			</select>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<button class="btn btn-primary" id="modalAddClassesButton">Add Selected Class</button>
+		</div>
+	</div>
+
+	<!-- Modal for Select a Subject -->
+	<div id="selectSubject" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3>Select a Class Subject</h3>
+		</div>
+		<div class="modal-body">
+		<h4 class="text-center" id="selectSubjectsLoading"><i class="icon-spinner icon-spin icon-large"></i> Loading Options...</h4>
+			<select class="fillModal" id="classSubjectSelect">
+			</select>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<button class="btn btn-primary" id="modalSelectSubjectButton">Find Classes</button>
+		</div>
+	</div>
+
+    <!-- Hosted CDN scripts -->
+
+    <!-- Local Javascript -->
+    <script src="js/jquery-1.10.1.min.js"></script>
+    <script src="js/jquery.mousewheel.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/controls.js"></script>
+    <script src="js/visual.js"></script>
+
+  </body>
+</html>

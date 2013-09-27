@@ -223,7 +223,5 @@ js/bootstrap.js
 font-awesome/css/font-awesome.css
 font-awesome/css/font-awesome-ie7.css
 node/
-APIServer/node_modules
-website/node_modules
 scraper/scrapedClasses.json
 scraper/scrapedSubjects.json
