@@ -1,10 +1,10 @@
 {
   "name": "courselogic",
   "version": "0.0.2",
-  "repository" : {
+  "repository": {
     "type" : "git",
     "url" : "https://github.com/JustinBis/CourseLogic.git"
-  }
+  },
   "dependencies": {
     "node-static": "0.7.x",
     "pg": "2.6.x"
