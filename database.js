@@ -19,6 +19,11 @@ var db_config = {
 // Database Code //
 ///////////////////
 
+// Override the db_config if a PostgreSQL connection string is given as an enviornment variable
+if(process.env.DATABASE_URL){
+	db_config = process.env.DATABASE_URL
+}
+
 function getSubjects(callback){
 	// The SQL statement to use
 	var stmt = 'SELECT * FROM subjects ORDER BY subjectid;';
