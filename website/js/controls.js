@@ -2,13 +2,12 @@
 // USER SET VARIABLES
 /////////////////////
 var APIhost = "api/"; // Maps to the API host
-//var APIhost = "courselogic-api.herokuapp.com"; // Maps to the API host
 
 
 /**
 	Activate bootstrap tooltips to show users how to use the site
 **/
-$("[data-toggle='tooltip']").tooltip()
+$("[data-toggle='tooltip']").tooltip();
 
 /**
 	Attaches a click handler to the trash icons that works even when new tables are added.
@@ -58,7 +57,7 @@ $('#classes').on('click', 'tr', function(){
 **/
 $('#classes').on('click', '.icon-circle-arrow-down', function(){
 	// Save the icon element reference for later
-	icon = $(this);
+	var icon = $(this);
 	// If the icon is already rotated and was then clicked, slide the table back down
 	if(icon.hasClass("icon-rotate-90")){
 		// Show all the siblings of the info row. I would use .slideDown, but it doesn't work on tables
@@ -74,7 +73,7 @@ $('#classes').on('click', '.icon-circle-arrow-down', function(){
 			
 		});
 		// Rotate the icon once the table has been hidden up
-		icon.addClass("icon-rotate-90")
+		icon.addClass("icon-rotate-90");
 	}
 });
 
@@ -84,13 +83,13 @@ $('#classes').on('click', '.icon-circle-arrow-down', function(){
 	Function to create the outside structure of a class table
 **/
 var createOuterTableHTML = function(tableTitle, classid){
-	var s = '<div><table class="table table-bordered"><tbody id="'
-	s += classid
-	s += '"><tr class="info"><td colspan="5"><i class="icon-trash icon-large"></i> &nbsp; <strong>'
-	s += tableTitle
-	s += '</strong><i class="icon-circle-arrow-down icon-large pull-right"></i></td></tr><tr class="tableHead"><th></th><th>CRN</th><th>Professor</th><th>Days</th><th>Time</th></tr></tbody></table></div>'
-	return s
-}
+	var s = '<div><table class="table table-bordered"><tbody id="';
+	s += classid;
+	s += '"><tr class="info"><td colspan="5"><i class="icon-trash icon-large"></i> &nbsp; <strong>';
+	s += tableTitle;
+	s += '</strong><i class="icon-circle-arrow-down icon-large pull-right"></i></td></tr><tr class="tableHead"><th></th><th>CRN</th><th>Professor</th><th>Days</th><th>Time</th></tr></tbody></table></div>';
+	return s;
+};
 
 /**
 	Function to create a table row out of json data
@@ -114,10 +113,10 @@ var createClassRowHTML = function(crn, professor, times){
 
 		if (i==0){
 			s += professor;
-			s += createRateMyProfessorIcon(professor)
+			s += createRateMyProfessorIcon(professor);
 		}
 		else
-			s += " "
+			s += " "; // Leave a blank space under the professor heading in classes with more than one row
 
 		s += '</td><td>';
 		s += this.days;
@@ -128,7 +127,7 @@ var createClassRowHTML = function(crn, professor, times){
 	});
 	// Return the complete string
 	return s;
-}
+};
 
 var createRateMyProfessorIcon = function(professor){
 	var s = '&nbsp;&nbsp;<a href="https://www.google.com/search?q=';
@@ -136,19 +135,7 @@ var createRateMyProfessorIcon = function(professor){
 	s += '+Auburn+University+Rate+My+Professors" target="_blank">';
 	s += '<i class="icon-question-sign"></i>';
 	return s;
-}
-
-/**
-	Function to append a table based on the given JSON-formatted data
-	DEPRICATED, should be removed
-**/
-var appendTable = function(tableTitle, classid, rows){
-	$('#classes').append(createTable(tableTitle, classid));
-
-	$.each(rows, function() {
-		$('#'+classid).append(createRow(this));
-	});
-}
+};
 
 /**
 	Function called when selecting "Add Class" from the modal dialogue
@@ -156,7 +143,7 @@ var appendTable = function(tableTitle, classid, rows){
 **/
 var processClassData = function(classname, classid, rows){
 	// First, remove existing class table if it already exists.
-	$('#'+classid).parent().parent().remove()
+	$('#'+classid).parent().parent().remove();
 	updateSelections();
 
 	// Create the needed outer HTML and append it
@@ -168,7 +155,7 @@ var processClassData = function(classname, classid, rows){
 		$('#'+classid).append(createClassRowHTML(this.crn, this.prof, this.times));
 	});
 
-}
+};
 
 /**
 	Controls the selection of rows. Will deselect other selected row, or toggle the selectd row off
@@ -183,25 +170,34 @@ var toggleRowSelect = function(element){
 		$(element).parent().find('.success').removeClass('success');
 		// Add the .success class to every class with a matching crn in the table (to capture labs, etc.)
 		var crn = $(element).attr('data-crn');
-		$(element).parent().find('[data-crn="'+crn+'"]').addClass("success")
+		$(element).parent().find('[data-crn="'+crn+'"]').addClass("success");
 	}
-}
+};
 
 /**
 	When the topic select modal is opened, this will query the server for the relevant classe topics
 **/
-//
 var subjectsFetched = false; // So we only make a subject request once
 $('#selectSubject').on('show', function(){
-	if(!subjectsFetched){
-		$.getJSON(APIhost+'subjects', function(data) {
-			$.each(data, function(){
-				$('#classSubjectSelect').append('<option data-index="'+(this.subjectid)+'">'+this.subjectid+': '+this.subjectname+'</option>');
+	if(!subjectsFetched)
+	{
+		$.getJSON(APIhost+'subjects')
+			// Function to run if the GET is successful
+			.done(function(data) {
+				$.each(data, function(){
+					$('#classSubjectSelect').append('<option data-index="'+(this.subjectid)+'">'+this.subjectid+': '+this.subjectname+'</option>');
+				});
+				$('#selectSubjectsLoading').slideUp(400);
+				subjectsFetched = true;
+			})
+			// Function to run if the GET fails
+			.fail(function(jqxhr, textStatus, err){
+				console.log( "Subject Request Failed: "+ textStatus + ", " + err);
+				$('#selectSubjectsLoading').hide();
+				$('#classSubjectSelect').hide();
+				$('#modalSelectSubjectButton').hide();
+				$('#selectSubjectsError').show();
 			});
-			$('#selectSubjectsLoading').slideUp(400);
-			subjectsFetched = true;
-		});
-		//subjectsFetched = true;
 	}
 });
 
@@ -220,13 +216,23 @@ $('#selectTopic').on('show', function(){
 	var subjectid = $('#classSubjectSelect option:selected').attr('data-index');
 	// Show the loading text
 	$('#selectTopicLoading').show();
-	$.getJSON(APIhost+'topics?subjectid='+subjectid, function(data) {
-		$.each(data, function(){
-			$('#classTopicSelect').append('<option data-index="'+this.classid+'">'+this.classid+': '+this.classname+'</option>');
+	$.getJSON(APIhost+'topics?subjectid='+subjectid)
+		// Function to run if the GET is successful
+		.done(function(data) {
+			$.each(data, function(){
+				$('#classTopicSelect').append('<option data-index="'+this.classid+'">'+this.classid+': '+this.classname+'</option>');
+			});
+			// Slide the loading text up
+			$('#selectTopicLoading').slideUp(400);
+		})
+		// Function to run if the GET fails
+		.fail(function(jqxhr, textStatus, err){
+			console.log( "Topic Request Failed: "+ textStatus + ", " + err);
+			$('#selectTopicLoading').hide();
+			$('#classTopicSelect').hide();
+			$('#modalAddClassesButton').hide();
+			$('#selectTopicError').show();
 		});
-		// Slide the loading text up
-		$('#selectTopicLoading').slideUp(400);
-	});
 });
 
 /**
@@ -237,13 +243,21 @@ $('#modalAddClassesButton').click(function(){
 	var classname = $('#classTopicSelect option:selected').val();
 
 	// Make the loading bar visible on the main page
-	$('#loadingTable').show()
+	$('#loadingTable').show();
 
 	// Request the classes and then make a table
-	$.getJSON(APIhost+'classes?classid='+classid, function(data){
-		processClassData(classname, classid, data);
-		$('#loadingTable').hide();
-	});
+	$.getJSON(APIhost+'classes?classid='+classid)
+		// Function to run if the GET is successful
+		.done(function(data){
+			processClassData(classname, classid, data);
+			$('#loadingTable').hide();
+		})
+		// Function to run if the GET fails
+		.fail(function(jqxhr, textStatus, err){
+			console.log( "Class Times Request Failed: "+ textStatus + ", " + err);
+			$('#loadingTable').hide();
+			$('#loadingTableError').append('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><strong>Error Loading Table</strong> Try again in a minute or two. Sorry!</div>');
+		});
 
 	// Hide the overlay
 	$('#selectTopic').modal('hide');
@@ -271,7 +285,6 @@ $(document).mouseup(function(){
 });
 
 var mouseMoveHandler = function(e) {
-	console.log(previousPageY);
 	if(previousPageY){
 		// Only update dragYOffset if it won't fall out of the allowed range
 		if( (dragYOffset + e.pageY - previousPageY) >= minYOffset && (dragYOffset + e.pageY - previousPageY) <= maxYOffset){
@@ -283,7 +296,7 @@ var mouseMoveHandler = function(e) {
 	else{
 		previousPageY = e.pageY;
 	}
-}
+};
 
 /**
 	Attach a listener to the visual for mousewheel scrolling so that works too.
@@ -294,7 +307,7 @@ $('#visual').bind('mousewheel', function(event, delta, deltaX, deltaY) {
 	// but this is a custom event, as the mouse wheel event is a very fractured web standard.
 
 	// Each scroll 'click' is a single deltaY, so let's scale it:
-	change = deltaY*25;
+	var change = deltaY*25;
 
     if( (dragYOffset + change) >= minYOffset && (dragYOffset + change) <= maxYOffset){
 		dragYOffset += change;

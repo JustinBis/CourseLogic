@@ -12,8 +12,7 @@ var db_config = {
     database: 'CourseLogic', // Name of the CourseLogic database
     host: 'localhost', // Hostname, e.g. localhost or 99.88.777.123
     ssl: true,
-}
-
+};
 
 ///////////////////
 // Database Code //
@@ -21,8 +20,9 @@ var db_config = {
 
 // Override the db_config if a PostgreSQL connection string is given as an enviornment variable
 if(process.env.DATABASE_URL){
-	db_config = process.env.DATABASE_URL
-}
+	db_config = process.env.DATABASE_URL;
+};
+
 
 function getSubjects(callback){
 	// The SQL statement to use
