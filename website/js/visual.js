@@ -1,13 +1,3 @@
-/**
-	These constants define the earliest and latest hours the schedule canvas will scroll to, in 24-hour format
- **/
-var EARLIEST_SCHEDULE_TIME = 6; // 6 A.M.
-var LATEST_SCHEDULE_TIME = 22; // 10 P.M.
-/**
-	This constant defines what time to start the canvas at
-**/
-var START_SCHEDULE_TIME = 8; // 8 A.M.
-
 var canvas = document.getElementById('visual');
 // Setup the canvas context
 if(canvas.getContext){
@@ -15,10 +5,6 @@ if(canvas.getContext){
 	context.textAlign = "center";
 	context.textBaseline = "middle";
 }
-
-var rowHeight = 50; // Height of each drawn row in pixels
-var dayWidth = 60; // Width of each day's column
-var timesColWidth = 50; // Width of the times col
 
 /**
 	Variable to keep track of the y-offset that comes from dragging the canvas
@@ -37,20 +23,6 @@ var maxYOffset = (EARLIEST_SCHEDULE_TIME - START_SCHEDULE_TIME)*rowHeight + 2*ro
 // This is equal to the number of rows down we can before reaching the defined end.
 // However, we also have to add the two extra top header rows, and then negate the whole thing as this is a transformation
 var minYOffset = -1*((LATEST_SCHEDULE_TIME+1 - START_SCHEDULE_TIME - (context.canvas.height/rowHeight - 2))*rowHeight + 2*rowHeight);
-
-/**
-	A list of the days to print to the header row.
-	Its length is also used to know how many class columns there should be.
-**/
-var days = ['Mon.', 'Tues.', 'Wed.', 'Thurs.', 'Fri.'];
-
-var selectedSections = [
-{
-	"name" : ["EXAMP", "101"],
-	"days" : [1, 3],
-	"startTime" : [11,00],
-	"endTime": [12,45]
-}];
 
 function drawBase(){
 	// Clear the canvas for a redraw
@@ -314,6 +286,3 @@ function updateVisual(){
 	// Draw the header last to hide everything behind it
 	drawHeader();
 }
-
-// Will execute once the script is loaded. So long as the script is loaded after the canvas is created, we're good.
-updateVisual();

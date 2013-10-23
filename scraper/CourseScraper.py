@@ -19,8 +19,8 @@ from __future__ import print_function # Because 2.7 print statements are stupid
 # Get from https://ssbprod.auburn.edu/pls/PROD/bwckschd.p_disp_dyn_sched
 # and the select all classes in the term
 # Only needs to be set if we're running this file directly
-classes_schedule_htmlfile = "all_classes.html"
-subjects_htmlfile = "subject_list.htm"
+classes_schedule_htmlfile = "classesPage.htm"
+subjects_htmlfile = "subjectsPage.htm"
 
 # Output filename for the scraped classes. Should be "scrapedClasses.json"
 classes_output_filename = 'scrapedClasses.json'

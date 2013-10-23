@@ -5,11 +5,12 @@
 ###############################
 
 """
-    This script takes well formatted json data, parses it, and then
-    attempts to inset the data into a MySQL database for use by the
-    CourseLogic server.
-    The json should be formatted as follows:
-        -
+   NOTE: This script is depricated as CourseLogic now uses PostgreSQL
+   Please don't rely on this, as it may be removed soon!
+
+   This script takes well formatted json data, parses it, and then
+   attempts to inset the data into a MySQL database for use by the
+   CourseLogic server.
 """
 
 ####################
@@ -20,9 +21,9 @@ classes_json_file = 'scrapedClasses.json' # Filename for the JSON data containin
 subjects_json_file = 'scrapedSubjects.json' # Filename for the JSON data containing the class listings
 
 db_config = {
-   'user'     : 'CourseLogicAdder', #MySQL Username
-   'password' : '7GmFSF6nQUcYVr6G', #MySQL Password
-   'host'     : '66.172.33.243', #MySQL Host
+   'user'     : 'user', #MySQL Username
+   'password' : 'pass', #MySQL Password
+   'host'     : 'host', #MySQL Host
    'database' : 'CourseLogic', #MySQL Database Name
    'raise_on_warnings': True # Will raise errors on MySQL warnings. Only set to false if you're brave and/or keep good backups.
 }

@@ -1,14 +1,3 @@
-/////////////////////
-// USER SET VARIABLES
-/////////////////////
-var APIhost = "api/"; // Maps to the API host
-
-
-/**
-	Activate bootstrap tooltips to show users how to use the site
-**/
-$("[data-toggle='tooltip']").tooltip();
-
 /**
 	Attaches a click handler to the trash icons that works even when new tables are added.
 **/
@@ -111,12 +100,17 @@ var createClassRowHTML = function(crn, professor, times){
 
 		s += '</td><td>';
 
-		if (i==0){
+		if (i==0)
+		{
 			s += professor;
-			s += createRateMyProfessorIcon(professor);
+			// Don't show the Rate My Prof icon if the professor is unknown
+			if(professor != "TBA")
+				s += createRateMyProfessorIcon(professor);
 		}
 		else
+		{
 			s += " "; // Leave a blank space under the professor heading in classes with more than one row
+		}
 
 		s += '</td><td>';
 		s += this.days;
@@ -187,7 +181,10 @@ $('#selectSubject').on('show', function(){
 				$.each(data, function(){
 					$('#classSubjectSelect').append('<option data-index="'+(this.subjectid)+'">'+this.subjectid+': '+this.subjectname+'</option>');
 				});
+				// Remove the loading dialogue
 				$('#selectSubjectsLoading').slideUp(400);
+				// Initialize Select2 on the loaded classes
+				//$("#classSubjectSelect").select2();
 				subjectsFetched = true;
 			})
 			// Function to run if the GET fails

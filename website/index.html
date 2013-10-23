@@ -7,14 +7,21 @@
     <meta name="description" content="An organized and logical way to plan your courses!">
     <meta name="author" content="Justin Bisignano">
 
-    <!-- styles -->
+    <!-- CDN styles -->
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Local styles -->
+
+    <link rel="stylesheet" href="css/customstyles.css">
+    <link rel="stylesheet" href="css/select2.css">
+    <!-- Moved to CDN:
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/customstyles.css"
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css"> -->
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-      <script src="js/html5shiv.js"></script>
+      <script src="js/lib/html5shiv.js"></script>
     <![endif]-->
 
   </head>
@@ -46,7 +53,7 @@
     		<div class="span12">
     			<div class="alert alert-info">
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
-					<strong>Welcome!</strong> Get started by clicking around and adding some classes! Remember, this is a beta, so not everything is guarenteed to work.
+					<strong>Welcome!</strong> Get started by clicking around and adding some classes! This is still in beta, so if you find an error let me know!
 				</div>
 				<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#selectSubject"><i class="icon-plus"></i>&nbsp; Add a Class</button>
 			</div>
@@ -116,7 +123,7 @@
     </div> <!-- /container /home -->
 
     <!-- Modal for Add A Class (Topic Select) -->
-	<div id="selectTopic" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div id="selectTopic" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 			<h3>Select a Class to Add</h3>
@@ -126,7 +133,9 @@
 
 			<h4 class="text-center" id="selectTopicError" style="display:none;">Loading Failed. Try again in a minute or two. <small>Sorry!</small></h4>
 
-			<select class="fillModal" id="classTopicSelect"></select>
+			<select class="fillModal" id="classTopicSelect" data-placeholder="Search or Select a Subject">
+				<option></option>
+			</select>
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -135,7 +144,7 @@
 	</div>
 
 	<!-- Modal for Select a Subject -->
-	<div id="selectSubject" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div id="selectSubject" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 			<h3>Select a Class Subject</h3>
@@ -145,7 +154,9 @@
 
 			<h4 class="text-center" id="selectSubjectsError" style="display:none;">Loading Failed. Try again in a minute or two. <small>Sorry!</small></h4>
 
-			<select class="fillModal" id="classSubjectSelect"></select>
+			<select class="fillModal" id="classSubjectSelect" data-placeholder="Search or Select a Subject">
+				<option></option>
+			</select>
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
@@ -154,13 +165,26 @@
 	</div>
 
     <!-- Hosted CDN scripts -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 
     <!-- Local Javascript -->
-    <script src="js/jquery-1.10.1.min.js"></script>
-    <script src="js/jquery.mousewheel.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <!-- Moved to CDN:
+    <script src="js/lib/jquery-1.10.1.min.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    -->
+    <script src="js/lib/jquery.mousewheel.js"></script>
+    <script src="js/lib/select2.js"></script>
+
+    <script src="js/variables.js"></script>
     <script src="js/controls.js"></script>
     <script src="js/visual.js"></script>
+    <script src="js/init.js"></script>
+
+    <!-- Google Analytics -->
+    <script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-44718647-1', 'courselogic.herokuapp.com');ga('send', 'pageview');
+	</script>
 
   </body>
 </html>

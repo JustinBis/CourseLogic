@@ -7,9 +7,6 @@ canvas {
 .table thead tr.visual > th {
 	background-color: #dff0d8;
 }
-#visual.affix{
-	float: right;
-}
 .icon-remove{
 	color: #c83025;
 }

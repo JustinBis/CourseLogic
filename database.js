@@ -14,6 +14,14 @@ var db_config = {
     ssl: true,
 };
 
+db_config = {
+    user: 'flhrpqkudjgwly',
+    password: 'EjL3pJfKAjK1qQr-GKT2Mz1Cgj',
+    database: 'deqgebvqf2iala', // Name of the CourseLogic database
+    host: 'ec2-54-227-239-195.compute-1.amazonaws.com', // Hostname, e.g. localhost or 99.88.777.123
+    ssl: true,
+};
+
 ///////////////////
 // Database Code //
 ///////////////////
