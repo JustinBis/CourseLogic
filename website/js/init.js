@@ -12,7 +12,6 @@
 **/
 
 $( document ).ready(function() {
-	//?? May have to initilize after loading, or provide loading functions
 	// Initialize select2 on the subject modal's <select>
 	$("#classSubjectSelect").select2();
 	// Initialize select2 on the topic modal's <select>
@@ -23,4 +22,9 @@ $( document ).ready(function() {
 
 	//Activate all bootstrap tooltips
 	$("[data-toggle='tooltip']").tooltip();
+
+	// Show tooltips and tutorial information to new users
+	// TODO: Write the tutorial js file, make sure it has a function to check
+	// if a user needs to see the tut
+	//startTutorial();
 });

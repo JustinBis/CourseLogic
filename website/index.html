@@ -39,8 +39,8 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href="#" data-toggle="modal" data-target="#aboutModal">About</a></li>
+              <li><a href="#" data-toggle="modal" data-target="#contactModal">Contact</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -55,6 +55,12 @@
 					<button type="button" class="close" data-dismiss="alert">&times;</button>
 					<strong>Welcome!</strong> Get started by clicking around and adding some classes! This is still in beta, so if you find an error let me know!
 				</div>
+				<noscript>
+					<div class="alert alert-danger">
+						<button type="button" class="close" data-dismiss="alert">&times;</button>
+						<strong>WARNING:</strong> Pretty much everything on this site requieres JavaScript. Please enable it, or update to a browser that supports the modern web (Chrome, Firefox, Safari).
+					</div>
+				</noscript>
 				<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#selectSubject"><i class="icon-plus"></i>&nbsp; Add a Class</button>
 			</div>
 		</div>
@@ -64,7 +70,7 @@
 		<!-- Begin Visual Canvas -->
 		<div class="row pull-right">
 			<canvas id="visual" width="350" height="600">
-				<strong>Your browser doesn't support Canvas elements.</strong>
+				<strong>Your browser doesn't support Canvas elements, so you won't be able to see the visual schedule. Why don't you use the latest version of Chrome, Firefox, or Safari instead?</strong>
 			</canvas>
 		</div>
 
@@ -76,7 +82,7 @@
 					<table class="table table-bordered">
 						<tbody id="EXAMP-101">
 							<tr class="info">
-								<td colspan="6"><i class="icon-trash icon-large"  data-toggle="tooltip" title="The trashcan removes an entire class"></i> &nbsp; <strong>EXAMPLE-101: An Example Class (Add your own above)</strong><i class="icon-circle-arrow-down icon-large pull-right" data-toggle="tooltip" title="Clicking this icon will minimize the table so extra classes aren't taking up space."></i></td>
+								<td colspan="6"><i class="icon-trash icon-large"  data-toggle="tooltip" title="The trashcan removes an entire class"></i> &nbsp; <strong>EXAMPLE-101: Underwater Basket Weaving (Add your own real class above)</strong><i class="icon-circle-arrow-down icon-large pull-right" data-toggle="tooltip" title="Clicking this icon will minimize the table so extra classes aren't taking up space."></i></td>
 							</tr>
 							<tr class="tableHead">
 								<th></th>
@@ -86,18 +92,18 @@
 								<th>Time</th>
 							</tr>
 							<tr data-crn="000">
-								<td><i class="icon-remove" data-toggle="tooltip" title="These icons remove a single row."></i></td>
+								<td><i class="icon-remove" data-toggle="tooltip" title="These icons remove a single class row."></i></td>
 								<td>000</td>
-								<td>Professor Someone
+								<td>Professor Squarepants
 									<a href="#" data-toggle="tooltip" title="These icons link to the professor's RateMyProfessors page."><i class="icon-question-sign"></i></a>
 								</td>
 								<td>MW</td>
 								<td>8:00am - 9:45am</tr>
 							</tr>
 							<tr data-crn="0000" class="success">
-								<td><i class="icon-remove" data-toggle="tooltip" title="These icons remove the class row."></i></td>
+								<td><i class="icon-remove" data-toggle="tooltip" title="These icons remove a single class row."></i></td>
 								<td>0000</td>
-								<td>Professor Else
+								<td>Professor Patrick
 									<a href="#" data-toggle="tooltip" title="These icons link to the professor's RateMyProfessors page."><i class="icon-question-sign"></i></a>
 								</td>
 								<td>TR</td>
@@ -118,14 +124,20 @@
 
 		</div><!-- /row -->
 
+		<div class="row" id="footer">
+			<div class="span12">
+				<span> &copy; 2013 Justin Bisignano &nbsp;|&nbsp; <a href="#" data-toggle="modal" data-target="#librariesModal">Libraries Used</a></span>
+			</div>
+		</div>
+
 		
 
     </div> <!-- /container /home -->
 
     <!-- Modal for Add A Class (Topic Select) -->
-	<div id="selectTopic" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div id="selectTopic" class="modal hide fade" role="dialog">
 		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<button type="button" class="close" data-dismiss="modal">×</button>
 			<h3>Select a Class to Add</h3>
 		</div>
 		<div class="modal-body">
@@ -138,15 +150,15 @@
 			</select>
 		</div>
 		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<button class="btn" data-dismiss="modal">Close</button>
 			<button class="btn btn-primary" id="modalAddClassesButton">Add Selected Class</button>
 		</div>
 	</div>
 
 	<!-- Modal for Select a Subject -->
-	<div id="selectSubject" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div id="selectSubject" class="modal hide fade" role="dialog">
 		<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<button type="button" class="close" data-dismiss="modal">×</button>
 			<h3>Select a Class Subject</h3>
 		</div>
 		<div class="modal-body">
@@ -159,8 +171,85 @@
 			</select>
 		</div>
 		<div class="modal-footer">
-			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+			<button class="btn" data-dismiss="modal">Close</button>
 			<button class="btn btn-primary" id="modalSelectSubjectButton">Find Classes</button>
+		</div>
+	</div>
+
+	<!-- Modal for "About" page -->
+	<div id="aboutModal" class="modal hide fade" role="dialog">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h3>About CourseLogic</h3>
+		</div>
+		<div class="modal-body">
+			<h4> What is CourseLogic? </h4>
+			<p>
+				CourseLogic is a tool designed to help you plan out a class schedule that works. No need to navigate through endless pages in a website designed for ancient computers; just search, select, and see your schedule instantly.
+			</p>
+
+			<h4> Are you sure this is all accurate? </h4>
+			<p>
+				Yup! All of the classes and times are pulled straight from Auburn's website. There's a chance one weird class caused an error, but it'd be pretty noticable that something's wrong. However, if you do notice an error, please <a href="#" data-toggle="modal" data-dismiss="modal" data-target="#contactModal">report it to me!</a>
+			</p>
+
+			<h4> Why do you use so many modals? </h4>
+			<p>
+				I'm no UI designer, as you can plainly see by the stock Bootstrap theme. Have a better idea for the interface? <a href="#" data-toggle="modal" data-dismiss="modal" data-target="#contactModal">Tell me about it!</a>
+			</p>
+			<h4> Is CourseLogic Open Source? Can I Help?</h4>
+			<p>
+				You bet! The entire website and server code are hosted <a href="https://github.com/JustinBis/CourseLogic/" target="_blank">here on GitHub.</a>
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" data-dismiss="modal">Close</button>
+		</div>
+	</div>
+
+	<!-- Modal for "Contact" page -->
+	<div id="contactModal" class="modal hide fade" role="dialog">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h3>Contact Me</h3>
+		</div>
+		<div class="modal-body">
+			<h4> Questions? Comments? Just want to send me a message? </h4>
+			<p>
+				Go ahead and send me an email! <a href='mailto:jtb0044@tigermail.auburn.edu' target="_blank">jtb0044@tigermail.auburn.edu</a>
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" data-dismiss="modal">Close</button>
+		</div>
+	</div>
+
+	<!-- Modal for "Libraries Used" page -->
+	<div id="librariesModal" class="modal hide fade" role="dialog">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h3>Libraries Used</h3>
+		</div>
+		<div class="modal-body">
+			<h4> Twitter Bootstrap </h4>
+			<p>
+				Serves as the platform for all CSS styling on this website and provides the modal overlays. <a href='http://getbootstrap.com/' target="_blank">Link <i class="icon-external-link-sign"></i></a>
+			</p>
+			<h4> jQuery </h4>
+			<p>
+				Used as a base for nearly everything javascript related. <a href='http://jquery.com/' target="_blank">Link <i class="icon-external-link-sign"></i></a>
+			</p>
+			<h4> jQuery Mousewheel </h4>
+			<p>
+				Needed for scrollwheel handling in the visual canvas since the mousewheel event is so broken across browsers. <a href='https://github.com/brandonaaron/jquery-mousewheel' target="_blank">Link <i class="icon-external-link-sign"></i></a>
+			</p>
+			<h4> Select2 </h4>
+			<p>
+				Used to make all selections cleaner and searchable. <a href='http://ivaynberg.github.io/select2/' target="_blank">Link <i class="icon-external-link-sign"></i></a>
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button class="btn btn-primary" data-dismiss="modal">Close</button>
 		</div>
 	</div>
 

@@ -199,7 +199,7 @@ $('#selectSubject').on('show', function(){
 });
 
 /**
-	When the Subject Select button is clicked, this will hide the modal overlay and save the relevant selection info
+	When the Subject Select button is clicked, this will hide the modal overlay
 **/
 $('#modalSelectSubjectButton').click(function(){
 	$('#selectSubject').modal('hide');
