@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>CourseLogic Class Scheduler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="An organized and logical way to plan your courses!">
+    <meta name="author" content="Justin Bisignano">
+
+    <!-- CDN styles -->
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+    <!-- Local styles -->
+
+    <link rel="stylesheet" href="css/customstyles.css">
+    <link rel="stylesheet" href="css/select2.css">
+    <!-- Moved to CDN:
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css"> -->
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="js/lib/html5shiv.js"></script>
+    <![endif]-->
+
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span>
+ <span class="icon-bar"></span>
+ <span class="icon-bar"></span>
+
+                </button> <a class="brand" href="#">CourseLogic</a>
+
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        <li class="active"><a href="#">Home</a>
+
+                        </li>
+                        <li><a href="#" data-toggle="modal" data-target="#aboutModal">About</a>
+
+                        </li>
+                        <li><a href="#" data-toggle="modal" data-target="#contactModal">Contact</a>
+
+                        </li>
+                    </ul>
+                </div>
+                <!--/.nav-collapse -->
+            </div>
+        </div>
+    </div>
+    <div class="container" id="home">
+        <div class="row">
+            <div class="span12">&nbsp;</div>
+        </div>
+        <!-- Needed as a spacer for God knows why. HTML sometimes, I swear... -->
+        <div class="row">
+            <div class="span7" id="classes">
+                <!-- Begin Class Listings -->
+                <div id="exampleTable">
+                    <table class="table table-striped">
+                        <tbody class="gradeTable "id="EXAMP-101">
+                            <tr class="info">
+                                <td colspan="3"><strong>Homework</strong></td>
+                            </tr>
+                            <tr class="tableHead">
+                                <th>Assignment Name</th>
+                                <th>Points You Got</th>
+                                <th>Out Of</th>
+                            </tr>
+                            <tr>
+                                <td>Chapter 1</td>
+                                <td>45</td>
+                                <td>50</td>
+                            </tr>
+                            <tr>
+                                <td>Chapter 2</td>
+                                <td>49</td>
+                                <td>50</td>
+                            </tr>
+                            <tr class="tableAddGrade">
+                                <td colspan="3">Add Another Grade</td>
+                            </tr>
+                            <tr class="tableTotal">
+                                <th>Total</th>
+                                <th>94</th>
+                                <th>100</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- /class listings -->
+            <div class="span7 text-center" id="loadingTable" style="display: none;">	<span><i class="icon-spinner icon-spin icon-large"></i> Loading Class Table...</span>
+
+            </div>
+            <div class="span7 text-center" id="loadingTableError"></div>
+        </div>
+        <!-- /row -->
+        <div class="row" id="footer">
+            <div class="span12">	<span> &copy; 2013 Justin Bisignano &nbsp;|&nbsp; <a href="#" data-toggle="modal" data-target="#librariesModal">Libraries Used</a></span>
+
+            </div>
+        </div>
+    </div>
+    <!-- /container /home -->
+</body>
+</html>

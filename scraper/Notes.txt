@@ -1,36 +1,53 @@
-Inital URL: https://ssbprod.auburn.edu/pls/PROD/bwckschd.p_disp_dyn_sched
+scraper.js will read "/scrapers/" directory for all .js files
+then require all .js files and asynchonously run them by calling the "main()" method which then returns a properly formatted javascript object of the form:
 
-Check this URL out for grabbing courseInfo:
-http://bulletin.auburn.edu/ribbit/index.cgi?page=getcourse.rjs&code=COMP%202210
-Some JS on this page handles it: http://bulletin.auburn.edu/undergraduate/samuelginncollegeofengineering/departmentofcomputerscienceandsoftwareengineering/computerscience_major/
+{
+	schoolID: "UF", // Text string uniquely identifying the school
+	schoolName: "University of Florida", // Full school name
+	subjects: 
+		[{
+			subjectID: "ACG",
+			subjectName: "Accounting"
+		},
+		{
+			subjectID: "COP",
+			subjectName: "Computer and Information Science and Engineering"
+		}],
+	classTopics:
+		[{
+			subjectID: "COP",
+			classID: "COP 3502",
+			className: "Programming Fundamentals 1"
+		},
+		{
+			subjectID: "COP",
+			classID: "COP 3503",
+			className: "Programming Fundamentals 2"
+		}],
+	classOptions:
+		[{
+			"crn": 11792" // CRN, uniquely identifying the section
+			"classID": "COP 3503" // Links back to classTopics
+			"prof": "Elizabeth G. Miller",
+			"times": 
+				[{
+					"days": "MWF", 
+					"location": "Lowder Hall 110", 
+					"time": "8:00 am - 8:50 am", 
+					"type": "Class"
+				}]
+		},
+		{
+			"crn": "2AB0"
+			"classID": "COP 3503"
+			"prof": "Dr. Mr. Professor II, esq.", 
+			"times": 
+				[{
+					"days": "MWF", 
+					"location": "Lowder Hall 110", 
+					"time": "9:00 am - 9:50 am", 
+					"type": "Class"
+				}]
+		}]
 
-
-Python Commands:
-import mechanize
-mechanize.Browser()
-br.set_debug_redirects(True)
-br.set_debug_responses(True)
-br.set_debug_http(True)
-br.open("https://ssbprod.auburn.edu/pls/PROD/bwckschd.p_disp_dyn_sched")
-br.select_form(nr=0)
-br['p_term'] = ['201410']
-response = br.submit()
-br.select_form(nr=0)
-control = br.form.find_control(id="subj_id")
-control.set(True, 'PHYS')
-br.submit()
-
-
-For each class row, the <tr> gets id= the crn of the class, so that we can select all matching CRNs in the table to grab labs, recitations, etc.
-
-To select the linked rows, just check for the data-crn attribute of the clicked row and hilight all matched rows in jQuery. 
-
-
-BeautifulSoup notes:
-
-
-If time is "TBA" or if schedule type is "Distance Learning" or "Independent Study" then we should skip that whole section 
-
-Switch BS for ElementTree? Seems to be more supported now
-
-Note that the dev instance of Heroku PostgreSQL only allows a single connection at a time, so we can't simultaneously allow the website to check the database and update it from the scraper scripts.
+}

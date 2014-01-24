@@ -1,0 +1,13 @@
+Purple BG: #7119b2
+
+.gradeTable>tr>td, .gradeTable>tr>th {
+    text-align: center;
+}
+/*.gradeTable > tr > td:first-child, .gradeTable > tr > th:first-child{
+    width: 50%;
+}*/
+.tableAddGrade>td:hover {
+    background-color: #A6FFF1;
+}
+
+Remember to add a row for edit icons!

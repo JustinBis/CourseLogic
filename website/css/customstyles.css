@@ -1,5 +1,5 @@
 body {
-	padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+	padding-top: 60px; /* 60px to make th-e container go all the way to the bottom of the topbar */
 }
 canvas {
 	border: 1px solid #ddd;
@@ -20,6 +20,7 @@ canvas {
 	color: #422;
 }
 .fillModal{
+	/* Used to stretch an element to the size of a modal overlay */
 	width: 520px;
 }
 #visual{
