@@ -111,7 +111,7 @@ function handleClassPage(html, callback){
 
 	// Create a variable to track the previous class, just in
 	// case we encounter a row that is connected to the last one
-	var previousClass;
+	var previousClassTimes;
 
 	// Select all of the available rows
 	$('#soc_content > center > table').find('tr').
@@ -126,7 +126,7 @@ function handleClassPage(html, callback){
 	// Loop through each matching row, adding them to the classOptions list
 	each(function()
 	{
-		handleClassRow(this, previousClass);
+		handleClassRow(this);
 	});
 
 	// Once done, call the callback to mark the reqest as complete
@@ -137,84 +137,81 @@ function handleClassPage(html, callback){
 	// the previousClass variable without it going out of scope
 	//
 
-
-};
-
-/**
-	Helper function for handleClassPage to handle a given row, create a
-	class object and push the object onto the 'classOptions' variable
-	Will also check if the class has been listed on the 'classTopics' list
-	and add it there if it hasn't been added before.
-	Inputs:
-		row: the row to be handled
-		previousClass: a refernce to the last class object to be handeled
-**/
-function handleClassRow(row, previousClass){
-	/* The row structure I'm following is: (- is skip)
-	   0   1 2 3 4    5    6  7     8       9      10  11    12          13
-	Class ID|-|-|-|-|Section|-|Days|Period|Building|Room|-|Class Name|Professor(s)
+	/**
+		Helper function for handleClassPage to handle a given row, create a
+		class object and push the object onto the 'classOptions' variable
+		Will also check if the class has been listed on the 'classTopics' list
+		and add it there if it hasn't been added before.
+		Input: row: the row to be handled
+	**/
+	function handleClassRow(row){
+		/* The row structure I'm following is: (- is skip)
+	   	0   1 2 3 4    5    6  7     8       9      10  11    12          13
+		Class ID|-|-|-|-|Section|-|Days|Period|Building|Room|-|Class Name|Professor(s)
+		*/
+		// First, select all of the <td>s in the row
+		var data = $(row).children('td');
+	
+		// Extract the information into a raw object
+		var raw = {}
+		raw.classID = data.eq(0).text().trim();
+		raw.crn = data.eq(5).text().trim();
+		raw.days = data.eq(7).text().trim();
+		raw.period = data.eq(8).text().trim();
+		raw.building = data.eq(9).text().trim() || ""; // Set to empty string if null
+		raw.room = data.eq(10).text().trim() || "";
+		raw.className = data.eq(12).text().trim();
+		raw.professor = data.eq(13).text().trim();
+	
+		// Check if the scraped row is a child of the previousClass
+		// This is when the classID and courseTitle are empty
+		if(raw.classID === "" && raw.className === "")
+		{
+			handleChildRow(raw);
+	
+		}
+		// Otherwise handle it normally
+		else
+		{
+			// Since this is a primary class, conform the data to the specifications
+			raw.classID = raw.classID.replace(' ', '-');
+		
+		
+			// Add the class to the classTopics if not already present
+			addClassTopic(raw.classID, raw.className);
+		
+			// Now we need to add the class info to the global classOptions object
+		
+			// Create an object to store the data
+			var thisClass = {};
+			thisClass.crn = raw.crn;
+			thisClass.classID = raw.classID;
+			// Selects only the first professor and adds a missing space
+			thisClass.prof = raw.professor.split('\n')[0].replace(',', ', ');
+			thisClass.times = []; // Empty list
+			thisClass.times.push( formatTimes(raw) ); // First time given by this row
+		
+		
+			// Finally, push the object onto the classOptions list
+			classOptions.push(thisClass);
+		
+			// Set the previousClass so we can come back to it in the next iteration if necessary
+			// Will store this one level up in context so it's only defined for each
+			// subject area and not the whole scaper.
+			previousClassTimes = thisClass.times;
+		}
+	
+	};
+	
+	/*
+		Will interpret the information in a child (lab) row and add it
+		as a time to the given previousClass
 	*/
-	// First, select all of the <td>s in the row
-	var data = $(row).children('td');
+	function handleChildRow(rawData){
+		// Format the times and push them onto the previousClass
+		previousClassTimes.push( formatTimes(rawData) );
+	};
 
-	// Extract the information into a raw object
-	var raw = {}
-	raw.classID = data.eq(0).text().trim();
-	raw.crn = data.eq(5).text().trim();
-	raw.days = data.eq(7).text().trim();
-	raw.period = data.eq(8).text().trim();
-	raw.building = data.eq(9).text().trim() || ""; // Set to empty string if null
-	raw.room = data.eq(10).text().trim() || "";
-	raw.className = data.eq(12).text().trim();
-	raw.professor = data.eq(13).text().trim();
-
-	// Check if the scraped row is a child of the previousClass
-	// This is when the classID isn't defined and the courseTitle isn't repeated
-	if(raw.classID == null && raw.courseTitle == null)
-	{
-		handleChildRow(raw, previousClass);
-		// Don't complete the rest of this function as we are only
-		// adding an additional time to the previous class
-		return; 
-
-	}
-
-	// Since this is a primary class, conform the data to the specifications
-	raw.classID = raw.classID.replace(' ', '-');
-
-
-	// Add the class to the classTopics if not already present
-	addClassTopic(raw.classID, raw.className);
-
-	// Now we need to add the class info to the global classOptions object
-
-	// Create an object to store the data
-	var thisClass = {};
-	thisClass.crn = raw.crn;
-	thisClass.classID = raw.classID;
-	// Selects only the first professor and adds a missing space
-	thisClass.prof = raw.professor.split('\n')[0].replace(',', ', ');
-	thisClass.times = []; // Empty list
-	thisClass.times.push( formatTimes(raw) ); // First time given by this row
-
-
-	// Finally, push the object onto the classOptions list
-	classOptions.push(thisClass);
-
-	// Set the previousClass so we can come back to it in the next iteration if necessary
-	// Will store this one level up in context so it's only defined for each
-	// subject area and not the whole scaper.
-	previousClass = thisClass;
-
-};
-
-/*
-	Will interpret the information in a child (lab) row and add it
-	as a time to the given previousClass
-*/
-function handleChildRow(rawData, previousClass){
-	// Format the times and push them onto the previousClass
-	previousClass.times.push( formatTimes(rawData) );
 };
 
 
