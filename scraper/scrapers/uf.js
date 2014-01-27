@@ -10,6 +10,10 @@ var cheerio = require('cheerio');
 var request = require('request');
 var events = require('events');
 
+// Debug and verbosity controls
+var debug = false; // Print debug info?
+var warnings = false; // Print warnings?
+
 // Used to control flow between functions
 var eventEmitter = new events.EventEmitter();
 
@@ -69,8 +73,6 @@ function main(callback) {
 					console.log("Error requesting "+url+"\nLogged error: "+error+"\n");
 				}
 			});
-		console.log("So broken");
-		break; // Just for testing, only run one iteration
 		}
 	});
 	
@@ -79,6 +81,8 @@ function main(callback) {
 	// so that we can call the callback with the finished object
 	// once all tasks have completed
 	eventEmitter.on('scrapingFinished', function(){
+		console.log('Finished scraping!');
+		console.log(JSON.stringify(classOptions, undefined, 2));
 		callback( formatReturnObject() );
 	});
 };
@@ -98,8 +102,8 @@ function requestComplete(completedRequestsCount, listLength){
 };
 
 /**
-	TODO
-	To be implemented
+	Takes in an html page of class options for a particular subject,
+	interprets them sequentially, then calls the given callback when completed
 **/
 function handleClassPage(html, callback){
 	// Load the page into cheerio, treating it just like jQuery
@@ -127,6 +131,13 @@ function handleClassPage(html, callback){
 
 	// Once done, call the callback to mark the reqest as complete
 	callback();
+
+	//
+	// These helper functions form closures, allowing us to reference
+	// the previousClass variable without it going out of scope
+	//
+
+
 };
 
 /**
@@ -162,7 +173,9 @@ function handleClassRow(row, previousClass){
 	if(raw.classID == null && raw.courseTitle == null)
 	{
 		handleChildRow(raw, previousClass);
-		return; // Don't complete the rest of this function
+		// Don't complete the rest of this function as we are only
+		// adding an additional time to the previous class
+		return; 
 
 	}
 
@@ -179,16 +192,19 @@ function handleClassRow(row, previousClass){
 	var thisClass = {};
 	thisClass.crn = raw.crn;
 	thisClass.classID = raw.classID;
-	thisClass.prof = raw.professor;
-	thisClass.times = formatTimes(raw);
+	// Selects only the first professor and adds a missing space
+	thisClass.prof = raw.professor.split('\n')[0].replace(',', ', ');
+	thisClass.times = []; // Empty list
+	thisClass.times.push( formatTimes(raw) ); // First time given by this row
+
+
+	// Finally, push the object onto the classOptions list
+	classOptions.push(thisClass);
 
 	// Set the previousClass so we can come back to it in the next iteration if necessary
 	// Will store this one level up in context so it's only defined for each
 	// subject area and not the whole scaper.
 	previousClass = thisClass;
-
-	// Finally, push the object onto the classOptions list
-	classOptions.push(thisClass);
 
 };
 
@@ -197,7 +213,8 @@ function handleClassRow(row, previousClass){
 	as a time to the given previousClass
 */
 function handleChildRow(rawData, previousClass){
-	return;
+	// Format the times and push them onto the previousClass
+	previousClass.times.push( formatTimes(rawData) );
 };
 
 
@@ -212,12 +229,14 @@ function formatTimes(rawData){
 	// Replace all whitespace in the days string
 	time.days = rawData.days.replace(/\s/g, '');
 
-	time.location = rawData.building + " " + rawData.room;
+	// Combine the location into one string, trimming excess whitespace
+	time.location = (rawData.building + " " + rawData.room).trim();
 
 	// Check if the class is an online class and set the type
 	if(rawData.building === "WEB")
 	{
 		time.type = "Online";
+		time.time = "Online";
 	}
 	else
 	{
@@ -243,12 +262,11 @@ function formatTimes(rawData){
 		"11": {"start": "6:15 pm", "end": "7:05 pm"},
 		"E1": {"start": "7:20 pm", "end": "8:10 pm"},
 		"E2": {"start": "8:20 pm", "end": "9:10 pm"},
-		"E3": {"start": "9:20 pm", "end": "10:10 pm"},
-
+		"E3": {"start": "9:20 pm", "end": "10:10 pm"}
 	};
 
-	// If it's just one period long
-	if (rawData.period.length === 1 || rawData.period.length === 2)
+	// If it's just one period long and is a listed period
+	if ((rawData.period.length === 1 || rawData.period.length === 2) && (rawData.period in UFPeriods))
 	{
 		startTime = UFPeriods[rawData.period].start;
 		endTime = UFPeriods[rawData.period].end;
@@ -256,12 +274,51 @@ function formatTimes(rawData){
 	// Else figure out what the start and end periods are
 	else
 	{
-		//
+		// If there is a dash, split over it and extract the times
+		if(rawData.period.split('-').length === 2)
+		{
+			startTime = UFPeriods[ rawData.period.split('-')[0] ].start;
+			endTime = UFPeriods[ rawData.period.split('-')[1] ].end;
+		}
+		// If the length is 4, it's probably  of the form "1011"
+		else if (rawData.period.length === 4)
+		{
+			try
+			{
+				// The first two characters are the start
+				startTime = UFPeriods[ rawData.period.substr(0, 2) ].start;
+				// The end two characters are the end time
+				endTime = UFPeriods[ rawData.period.substr(2, 4) ].end;
+			}
+			catch(e)
+			{
+				if(warnings)
+				{
+					console.log('Warning: Error on period: ' + rawData.period);
+					console.log('For class: ' + rawData.classID + 'And previous class: ' + previousClass.classID);
+				}
+				// Set the time to Online or TBA
+				time.type = "Online";
+				time.time = "Online or TBA";
+			}
+			
+		}
+		// Otherwise, let's assume it's a web class or TBA
+		else
+		{
+			time.type = "Online";
+			time.time = "Online or TBA";
+		}
 	}
 
-	times.time = startTime + " - " + endTime;
+	// Only set if it isn't an online class and the time has been defined
+	if(time.type !== "Online")
+	{
+		time.time = startTime + " - " + endTime;
+	}
 
-
+	// Finally, return the formatted time object
+	return time;
 };
 
 /*
@@ -285,7 +342,8 @@ function addClassTopic(classID, className){
 	// Skip this if we just added a class (that's what 'else' does here)
 	else if( classTopics[classID].className !== className )
 	{
-		console.log("Warning: Name conflict for class "+classID+". Keeping original name.");
+		if(debug || warnings)
+			console.log("Warning: Name conflict for class "+classID+". Keeping original name.");
 		return;
 	}
 };
