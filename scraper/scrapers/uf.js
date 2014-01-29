@@ -81,8 +81,6 @@ function main(callback) {
 	// so that we can call the callback with the finished object
 	// once all tasks have completed
 	eventEmitter.on('scrapingFinished', function(){
-		console.log('Finished scraping!');
-		console.log(JSON.stringify(classOptions, undefined, 2));
 		callback( formatReturnObject() );
 	});
 };
@@ -419,25 +417,29 @@ function scrapeSubjects(html){
 	Formats all of the scraped data into a well-formed obeject
 	that follows the output specifications in the README.
 */
-function formatReturnObject() {
+function formatReturnObject(){
 	// Incorporate global variables into a single return object
 	output = {};
 	output.schoolID = schoolID;
 	output.schoolName = schoolName;
 	output.subjects = subjects;
-	output.classTopics = classTopics;
+	output.classTopics = classTopics; // 
 	output.classOptions = classOptions;
 
 	return output;
 }
 
 
+/*
+	Takes in the global keyed classTopics object and reformats it into a
+	list of non-keyed classTopics objects where the objects contain the keys.
+*/
+function formatClassTopics(topicsObject){
+	var topicsList = [];
+
+	return topicsList;
+}
+
+
 // Finally, export the main method 
 exports.main = main;
-
-// And if for some reason the script is run directly, 
-// let's just print the output of main
-main(function(output){
-	console.log("End of script:");
-	//console.log(JSON.stringify( output ));
-});
