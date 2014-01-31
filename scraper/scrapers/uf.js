@@ -32,12 +32,10 @@ var schoolID = "UF";
 // The official name of the school
 var schoolName = "University of Florida";
 
-// The three lists to store data in needed as part of the return object
+// The three data stores needed as part of the return object
 var subjects = [];
+var classTopics = {}; // Will be converted to a list by formatReturnObject
 var classOptions = [];
-// formatReturnObject will format this into a list when done
-// kept as an object here to simplify searching for unique classes
-var classTopics = {};
 
 
 /**
@@ -423,19 +421,29 @@ function formatReturnObject(){
 	output.schoolID = schoolID;
 	output.schoolName = schoolName;
 	output.subjects = subjects;
-	output.classTopics = classTopics; // 
+	output.classTopics = formatClassTopics(classTopics); 
 	output.classOptions = classOptions;
 
 	return output;
 }
 
-
 /*
-	Takes in the global keyed classTopics object and reformats it into a
-	list of non-keyed classTopics objects where the objects contain the keys.
+	Takes in a classTopics object that is keyed by classID
+	and converts and returns it as an equivalent list
 */
 function formatClassTopics(topicsObject){
 	var topicsList = [];
+
+	for(key in topicsObject)
+	{
+		topicsList.push(
+		{
+			subjectID: topicsObject[key].subjectID,
+			classID: key,
+			className: topicsObject[key].className
+		}
+		);
+	}
 
 	return topicsList;
 }

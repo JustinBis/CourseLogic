@@ -16,7 +16,7 @@
 var scrapersPath = './scrapers/';
 
 // Database class. Should exist one directory up.
-var Database = require('../database')
+var database = require('../database')
 
 
 /*
@@ -29,9 +29,9 @@ function main(){
 	var scrapersList = loadScrapers(scrapersPath);
 
 	// Loops through the list, calling the main() function of each scraper
-	// and passes in the updateDatabase() function as the callback for each
+	// and then passing the results to the database handler
 	scrapersList.forEach(function(scraper) {
-		scraper.main(updateDatabase);
+		scraper.main( database.updateClassData );
 	});
 }
 
@@ -54,14 +54,5 @@ function loadScrapers(path){
 	return scrapersList;
 }
 
-
-/*
-	TODO
-	Input: data, an object formatted like the one described in the notes.txt
-*/
-function updateDatabase(data) {
-	console.log("Called updateDatabase()")
-}
-
-// For testing, so we can run this directly
-main();
+// Export the main method
+exports.main = main;

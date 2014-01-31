@@ -179,7 +179,7 @@ $('#selectSubject').on('show', function(){
 			// Function to run if the GET is successful
 			.done(function(data) {
 				$.each(data, function(){
-					$('#classSubjectSelect').append('<option data-index="'+(this.subjectid)+'">'+this.subjectid+': '+this.subjectname+'</option>');
+					$('#classSubjectSelect').append('<option data-index="'+(this.subjectID)+'">'+this.subjectID+': '+this.subjectName+'</option>');
 				});
 				// Remove the loading dialogue
 				$('#selectSubjectsLoading').slideUp(400);
