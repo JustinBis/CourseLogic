@@ -226,3 +226,8 @@ node/
 node_modules/
 scraper/scrapedClasses.json
 scraper/scrapedSubjects.json
+*.sublime-workspace
+
+*.txt
+
+*.sublime-workspace
