@@ -3,7 +3,7 @@ var express = require('express'),
 	db = require('../database');
 
 app.get('/api', function(req, res){
-	res.send("CourseLogic API v0.1 (If you're seeing this, the API is running)");
+	res.send("CourseLogic API v0.1 (If you're seeing this, the API is running (probably))");
 });
 
 app.get('/api/:schoolID/subjects', db.getSubjects);

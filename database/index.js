@@ -3,9 +3,18 @@ var mongoose = require('mongoose'),
 	ClassDataModel = mongoose.model('ClassData', schemas.classData),
 	SubjectModel = mongoose.model('SubjectModel', schemas.subject); // May not be needed
 
-// Connect to the database
-mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/CourseLogic');
+// Connect to the database (and keep this connection alive)
+console.log('Opening MongoDB connection...');
+
+var options = {
+	db: { native_parser: true },
+	server: { poolSize: 5 },
+	replset: { rs_name: 'myReplicaSetName' },
+};
+options.server.socketOptions = options.replset.socketOptions = { keepAlive: 1 };
+mongoose.connect(process.env.MONGOHQ_URL || 'mongodb://localhost/CourseLogic', options);
 mongoose.set('debug', true);
+
 
 // Export our database functions
 exports.getSubjects = function(req, res){
@@ -35,11 +44,4 @@ exports.updateClassData = function(classDataObject){
 	// 'upsert' will insert the classData if nothing is matched
 	var query = { schoolID : classDataObject.schoolID };
 	ClassDataModel.update( query, classDataObject, { upsert : true } );
-
-	/*var dataModel = new ClassDataModel(classDataObject);
-
-	dataModel.save(function (err) {
-		if(err) return console.error(err);
-		// Saved!
-	});*/
 }

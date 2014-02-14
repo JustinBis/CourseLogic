@@ -13,7 +13,7 @@
 
 
 // Path to the folder containing all of scrapers
-var scrapersPath = './scrapers/';
+var scrapersPath = __dirname+'/scrapers/';
 
 // Database class. Should exist one directory up.
 var database = require('../database')
