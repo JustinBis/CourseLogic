@@ -18,7 +18,9 @@ mongoose.set('debug', true);
 
 // Export our database functions
 exports.getSubjects = function(req, res){
-	var conditions = { schoolID : req.params.schoolID.toUpperCase()}
+	var conditions = {
+		schoolID : req.params.schoolID.toUpperCase()
+	};
 	// Query for whatever matches the conditions, selecting only the subjects field
 	return ClassDataModel.findOne(conditions, 'subjects', function (err, results) {
 		if(err) return console.error(err);
@@ -27,7 +29,16 @@ exports.getSubjects = function(req, res){
 }
 
 exports.getTopics = function(req, res){
-
+	// TODO - Query aginst subtree and return just the subtree, not whole doc.
+	var conditions = {
+		schoolID : req.params.schoolID.toUpperCase(),
+		'classTopics.subjectID' : req.query.subjectID.toUpperCase()
+	};
+	// Query against the conditions, selecting only the classTopics field
+	return ClassDataModel.find(conditions, 'classTopics', function (err, results) {
+		if(err) return console.error(err);
+		res.send(results.classTopics);
+	});
 }
 
 exports.getClasses = function(req, res){

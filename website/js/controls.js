@@ -210,10 +210,10 @@ $('#modalSelectSubjectButton').click(function(){
 	When the topic select modal is opened, this will query the server for the relevant classe topics
 **/
 $('#selectTopic').on('show', function(){
-	var subjectid = $('#classSubjectSelect option:selected').attr('data-index');
+	var subjectID = $('#classSubjectSelect option:selected').attr('data-index');
 	// Show the loading text
 	$('#selectTopicLoading').show();
-	$.getJSON(APIhost+'topics?subjectid='+subjectid)
+	$.getJSON(APIhost+'topics?subjectID='+subjectID)
 		// Function to run if the GET is successful
 		.done(function(data) {
 			$.each(data, function(){
