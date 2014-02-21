@@ -19,11 +19,11 @@ var scrapersPath = __dirname+'/scrapers/';
 var database = require('../database')
 
 
-/*
-	This main function will run the main functions from each scraper
-	in the scrapersPath directory, passing the results as a callback to
-	the updateDatabase() function.
-*/
+/**
+ * This main function will run the main functions from each scraper
+ * in the scrapersPath directory, passing the results as a callback to
+ * the updateDatabase() function.
+ */
 function main(){
 	// Loads all of the scrapers into a list.
 	var scrapersList = loadScrapers(scrapersPath);
@@ -36,10 +36,10 @@ function main(){
 }
 
 
-/*
-	Searches the given path for all .js files and requires each, adding
-	each result to the returned array.
-*/
+/**
+ * Searches the given path for all .js files and requires each, adding
+ * each result to the returned array.
+ */
 function loadScrapers(path){
 	var scrapersList = [];
 

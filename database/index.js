@@ -1,3 +1,4 @@
+// Dependencies
 var mongoose = require('mongoose'),
 	schemas = require('./schemas'),
 	ClassDataModel = mongoose.model('ClassData', schemas.classData),
@@ -17,6 +18,14 @@ mongoose.set('debug', true);
 
 
 // Export our database functions
+
+/**
+ * Retrieves the 'subjects' document from the DB for the given school
+ * and sends it via the passed response object.
+ *
+ * Expects a request object that has the schoolID parameter set
+ * such as http://host/api/:schoolid/subjects
+ */
 exports.getSubjects = function(req, res){
 	var conditions = {
 		schoolID : req.params.schoolID.toUpperCase()
@@ -28,6 +37,14 @@ exports.getSubjects = function(req, res){
 	});
 }
 
+
+/**
+ * Retrieves the 'classTopics' document from the DB for the given school
+ * and the queried subjectID, then sends it via the passed response object.
+ *
+ * Expects a request object that has the schoolID parameter set and a query
+ * that defines the subjectID.
+ */
 exports.getTopics = function(req, res){
 	// TODO - Query aginst subtree and return just the subtree, not whole doc.
 	var conditions = {
@@ -46,10 +63,12 @@ exports.getClasses = function(req, res){
 }
 
 
-/*
-	This function should be called by the scrapers in order to 
-	update their record in the database.
-*/
+/**
+ * This function should be called by the scrapers in order to 
+ * update their record in the database.
+ * 
+ * Requires a valid classDataObject to be passed in as the only arg
+ */
 exports.updateClassData = function(classDataObject){
 	// Will update the first record that matches the query
 	// 'upsert' will insert the classData if nothing is matched

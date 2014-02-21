@@ -39,9 +39,10 @@ var classOptions = [];
 
 
 /**
-	The main method; runs upon script initilization.
-	Retuns a formatted javascript object of all scraped classes.
-**/
+ * The main method; runs upon script initilization.
+ * Passes a formatted javascript object of all 
+ * scraped classes onto the given callback function
+ */
 function main(callback) {
 
 	// First, collect a list of the pages we need to scrape (Async)
@@ -85,11 +86,11 @@ function main(callback) {
 
 
 /**
-	To be called every time a counted request is completed
-	Will compare the completedRequestsCount with the given listLength
-	If they are equal, fire the 'scrapingFinished' event to signal that
-	the requests are complete and the scraping is done 
-**/
+ * To be called every time a counted request is completed
+ * Will compare the completedRequestsCount with the given listLength
+ * If they are equal, fire the 'scrapingFinished' event to signal that
+ * the requests are complete and the scraping is done 
+ */
 function requestComplete(completedRequestsCount, listLength){
 	if (completedRequestsCount == listLength)
 	{
@@ -98,9 +99,9 @@ function requestComplete(completedRequestsCount, listLength){
 };
 
 /**
-	Takes in an html page of class options for a particular subject,
-	interprets them sequentially, then calls the given callback when completed
-**/
+ * Takes in an html page of class options for a particular subject,
+ * interprets them sequentially, then calls the given callback when completed
+ */
 function handleClassPage(html, callback){
 	// Load the page into cheerio, treating it just like jQuery
 	$ = cheerio.load(html);
@@ -211,10 +212,10 @@ function handleClassPage(html, callback){
 };
 
 
-/*
-	Takes in a raw class row data object and extracts the times from it
-	Will return a properly formatted class time object
-*/
+/**
+ * Takes in a raw class row data object and extracts the times from it
+ * Will return a properly formatted class time object
+ */
 function formatTimes(rawData){
 	// Create a new object to store the time
 	var time = {};
@@ -314,9 +315,9 @@ function formatTimes(rawData){
 	return time;
 };
 
-/*
-	Will add a class to the global classTopics list, if not already present
-*/
+/**
+ * Will add a class to the global classTopics list, if not already present
+ */
 function addClassTopic(classID, className){
 	// Check if the class is already listed, and if it isn't, list it
 	if (! (classID in classTopics))
@@ -343,11 +344,11 @@ function addClassTopic(classID, className){
 
 
 /**
-	Looks through the select at the top of the page to find all URLs
-	that we have to look through to collect class data.
-	Args: a baseURL to look at for the links and a callback to call
-	with a list of full URLs to scrape when done.
-**/
+ * Looks through the select at the top of the page to find all URLs
+ * that we have to look through to collect class data.
+ * Args: a baseURL to look at for the links and a callback to call
+ * with a list of full URLs to scrape when done.
+ */
 function getPageURLs(baseURL, callback) {
 	request(baseURL, function (error, response, html) {
 		// Only continue if we got a successful response
@@ -386,9 +387,9 @@ function getPageURLs(baseURL, callback) {
 
 
 /**
-	Takes in the HTML from the start page and scrapes the list of subjects
-	from the main table, adding them to the global 'subjects' variable
-**/
+ * Takes in the HTML from the start page and scrapes the list of subjects
+ * from the main table, adding them to the global 'subjects' variable
+ */
 function scrapeSubjects(html){
 	// Load the html into cheerio, treating it just like jQuery
 	var $ = cheerio.load(html);
@@ -411,10 +412,10 @@ function scrapeSubjects(html){
 };
 
 
-/*
-	Formats all of the scraped data into a well-formed obeject
-	that follows the output specifications in the README.
-*/
+/**
+ * Formats all of the scraped data into a well-formed obeject
+ * that follows the output specifications in the README.
+ */
 function formatReturnObject(){
 	// Incorporate global variables into a single return object
 	output = {};
@@ -427,10 +428,10 @@ function formatReturnObject(){
 	return output;
 }
 
-/*
-	Takes in a classTopics object that is keyed by classID
-	and converts and returns it as an equivalent list
-*/
+/**
+ * Takes in a classTopics object that is keyed by classID
+ * and converts and returns it as an equivalent list
+ */
 function formatClassTopics(topicsObject){
 	var topicsList = [];
 
