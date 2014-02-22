@@ -3,26 +3,21 @@
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema;
 
-var classDataSchema = new Schema({
-	schoolID: String,
-	schoolName: String,
-	subjects: [subjectSchema],
-	classTopics: [classTopicSchema],
-	classOptions:[classOptionSchema]
-});
-
 var subjectSchema = new Schema({
+	schoolID: String,
 	subjectID: String,
 	subjectName: String
 });
 
 var classTopicSchema = new Schema({
+	schoolID: String,
 	subjectID: String,
 	classID: String,
 	className: String
 });
 
 var classOptionSchema = new Schema({
+	schoolID: String,
 	crn: String,
 	classID: String,
 	prof: String,
@@ -36,7 +31,6 @@ var classTimeSchema = new Schema({
 	type: String
 });
 
-exports.classData = classDataSchema;
-exports.subject = subjectSchema;
-exports.classTopic = classTopicSchema;
-exports.classOption = classOptionSchema;
+exports.Subject = subjectSchema;
+exports.ClassTopic = classTopicSchema;
+exports.ClassOption = classOptionSchema;

@@ -71,9 +71,9 @@ $('#classes').on('click', '.icon-circle-arrow-down', function(){
 /**
 	Function to create the outside structure of a class table
 **/
-var createOuterTableHTML = function(tableTitle, classid){
+var createOuterTableHTML = function(tableTitle, classID){
 	var s = '<div><table class="table table-bordered"><tbody id="';
-	s += classid;
+	s += classID;
 	s += '"><tr class="info"><td colspan="5"><i class="icon-trash icon-large"></i> &nbsp; <strong>';
 	s += tableTitle;
 	s += '</strong><i class="icon-circle-arrow-down icon-large pull-right"></i></td></tr><tr class="tableHead"><th></th><th>CRN</th><th>Professor</th><th>Days</th><th>Time</th></tr></tbody></table></div>';
@@ -82,7 +82,7 @@ var createOuterTableHTML = function(tableTitle, classid){
 
 /**
 	Function to create a table row out of json data
-	Should be appended to the end of a tbody tag selected by a classid
+	Should be appended to the end of a tbody tag selected by a classID
 	Input: crn as a string, professor as a string, and times as an array of objects
 **/
 var createClassRowHTML = function(crn, professor, times){
@@ -135,18 +135,18 @@ var createRateMyProfessorIcon = function(professor){
 	Function called when selecting "Add Class" from the modal dialogue
 	and all selections have been made.
 **/
-var processClassData = function(classname, classid, rows){
+var processClassData = function(className, classID, rows){
 	// First, remove existing class table if it already exists.
-	$('#'+classid).parent().parent().remove();
+	$('#'+classID).parent().parent().remove();
 	updateSelections();
 
 	// Create the needed outer HTML and append it
-	var tableHTML = createOuterTableHTML(classname, classid);
+	var tableHTML = createOuterTableHTML(className, classID);
 	$('#classes').append(tableHTML);
 
 	// Loop through each section and add them as rows to the new table
 	$.each(rows, function() {
-		$('#'+classid).append(createClassRowHTML(this.crn, this.prof, this.times));
+		$('#'+classID).append(createClassRowHTML(this.crn, this.prof, this.times));
 	});
 
 };
@@ -217,7 +217,7 @@ $('#selectTopic').on('show', function(){
 		// Function to run if the GET is successful
 		.done(function(data) {
 			$.each(data, function(){
-				$('#classTopicSelect').append('<option data-index="'+this.classid+'">'+this.classid+': '+this.classname+'</option>');
+				$('#classTopicSelect').append('<option data-index="'+this.classID+'">'+this.classID+': '+this.className+'</option>');
 			});
 			// Slide the loading text up
 			$('#selectTopicLoading').slideUp(400);
@@ -236,17 +236,17 @@ $('#selectTopic').on('show', function(){
 	When the "Add Selected Classes" button is clicked, hides the modal overlay and creates a table
 **/
 $('#modalAddClassesButton').click(function(){
-	var classid = $('#classTopicSelect option:selected').attr('data-index');
-	var classname = $('#classTopicSelect option:selected').val();
+	var classID = $('#classTopicSelect option:selected').attr('data-index');
+	var className = $('#classTopicSelect option:selected').val();
 
 	// Make the loading bar visible on the main page
 	$('#loadingTable').show();
 
 	// Request the classes and then make a table
-	$.getJSON(APIhost+'classes?classid='+classid)
+	$.getJSON(APIhost+'classes?classID='+classID)
 		// Function to run if the GET is successful
 		.done(function(data){
-			processClassData(classname, classid, data);
+			processClassData(className, classID, data);
 			$('#loadingTable').hide();
 		})
 		// Function to run if the GET fails
