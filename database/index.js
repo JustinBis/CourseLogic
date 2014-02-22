@@ -110,10 +110,15 @@ exports.updateClassData = function(classDataObject){
  * So watch out for that if the schema or function changes.
  */
 function updateSubjects(subjects, schoolID) {
+	// First, empty the current collection as upserting will leave old entries that should be removed
+	Subject.remove({}, function () { });
+
+	// Insert each subject as its own document
 	subjects.forEach( function(subject) {
 		var conditions = {
 			schoolID: schoolID,
 			subjectID: subject.subjectID,
+			subjectName: subject.subjectName
 		}
 
 		// The passed object should define all of the fields to update except for the schoolID
@@ -136,6 +141,10 @@ function updateSubjects(subjects, schoolID) {
  * defaults, setters, validators, and middleware are ignored
  */
 function updateClassTopics(classTopics, schoolID) {
+	// First, empty the current collection as upserting will leave old entries that should be removed
+	ClassTopic.remove({}, function () { });
+
+	// Insert each topic as its own document
 	classTopics.forEach( function(topic) {
 		var conditions = {
 			schoolID: schoolID,
@@ -162,6 +171,10 @@ function updateClassTopics(classTopics, schoolID) {
  * defaults, setters, validators, and middleware are ignored
  */
 function updateClassOptions(classOptions, schoolID) {
+	// First, empty the current collection as upserting will leave old entries that should be removed
+	ClassOption.remove({}, function () { });
+
+	// Insert each class as its own document
 	classOptions.forEach( function(classOption) {
 		var conditions = {
 			schoolID: schoolID,
