@@ -18,7 +18,7 @@ var warnings = false; // Print warnings?
 var eventEmitter = new events.EventEmitter();
 
 // The URL to begin scraping from.
-var startURL = "http://www.registrar.ufl.edu/soc/201401/all/";
+var startURL = "http://www.registrar.ufl.edu/soc/201408/all/";
 
 
 //*****************************//
@@ -32,18 +32,21 @@ var schoolID = "UF";
 // The official name of the school
 var schoolName = "University of Florida";
 
-// The three lists to store data in needed as part of the return object
+// The three data stores needed as part of the return object
 var subjects = [];
+var classTopics = {}; // Will be converted to a list by formatReturnObject
 var classOptions = [];
-// formatReturnObject will format this into a list when done
-// kept as an object here to simplify searching for unique classes
-var classTopics = {};
+
+//
+// End output object data
+//
 
 
 /**
-	The main method; runs upon script initilization.
-	Retuns a formatted javascript object of all scraped classes.
-**/
+ * The main method; runs upon script initilization.
+ * Passes a formatted javascript object of all 
+ * scraped classes onto the given callback function
+ */
 function main(callback) {
 
 	// First, collect a list of the pages we need to scrape (Async)
@@ -56,11 +59,13 @@ function main(callback) {
 		// we know when they've all completed
 		var completedRequestsCount = 0;
 		for( var i in urls )
-		{
-			request(urls[i], function(error, response, html){
+		{ 
+		// Capture the variable i at each iteration
+		(function(i){
+			request(urls[i].url, function(error, response, html){
 				if (!error && response.statusCode == 200)
 				{
-					handleClassPage(html, function(){
+					handleClassPage(html, urls[i].subjectID, function(){
 						// Mark the request as complete
 						completedRequestsCount += 1;
 						requestComplete(completedRequestsCount, urls.length);
@@ -73,6 +78,7 @@ function main(callback) {
 					console.log("Error requesting "+url+"\nLogged error: "+error+"\n");
 				}
 			});
+		})(i)
 		}
 	});
 	
@@ -81,17 +87,18 @@ function main(callback) {
 	// so that we can call the callback with the finished object
 	// once all tasks have completed
 	eventEmitter.on('scrapingFinished', function(){
+		console.log('Finished scraping UF\'s classes.');
 		callback( formatReturnObject() );
 	});
 };
 
 
 /**
-	To be called every time a counted request is completed
-	Will compare the completedRequestsCount with the given listLength
-	If they are equal, fire the 'scrapingFinished' event to signal that
-	the requests are complete and the scraping is done 
-**/
+ * To be called every time a counted request is completed
+ * Will compare the completedRequestsCount with the given listLength
+ * If they are equal, fire the 'scrapingFinished' event to signal that
+ * the requests are complete and the scraping is done 
+ */
 function requestComplete(completedRequestsCount, listLength){
 	if (completedRequestsCount == listLength)
 	{
@@ -100,10 +107,10 @@ function requestComplete(completedRequestsCount, listLength){
 };
 
 /**
-	Takes in an html page of class options for a particular subject,
-	interprets them sequentially, then calls the given callback when completed
-**/
-function handleClassPage(html, callback){
+ * Takes in an html page of class options for a particular subjectID,
+ * interprets them sequentially, then calls the given callback when completed
+ */
+function handleClassPage(html, subjectID, callback){
 	// Load the page into cheerio, treating it just like jQuery
 	$ = cheerio.load(html);
 
@@ -144,7 +151,7 @@ function handleClassPage(html, callback){
 	**/
 	function handleClassRow(row){
 		/* The row structure I'm following is: (- is skip)
-	   	0   1 2 3 4    5    6  7     8       9      10  11    12          13
+	   	0        1 2 3 4    5    6  7     8       9      10  11    12          13
 		Class ID|-|-|-|-|Section|-|Days|Period|Building|Room|-|Class Name|Professor(s)
 		*/
 		// First, select all of the <td>s in the row
@@ -166,7 +173,6 @@ function handleClassPage(html, callback){
 		if(raw.classID === "" && raw.className === "")
 		{
 			handleChildRow(raw);
-	
 		}
 		// Otherwise handle it normally
 		else
@@ -174,9 +180,8 @@ function handleClassPage(html, callback){
 			// Since this is a primary class, conform the data to the specifications
 			raw.classID = raw.classID.replace(' ', '-');
 		
-		
 			// Add the class to the classTopics if not already present
-			addClassTopic(raw.classID, raw.className);
+			addClassTopic(raw.classID, subjectID, raw.className);
 		
 			// Now we need to add the class info to the global classOptions object
 		
@@ -188,7 +193,6 @@ function handleClassPage(html, callback){
 			thisClass.prof = raw.professor.split('\n')[0].replace(',', ', ');
 			thisClass.times = []; // Empty list
 			thisClass.times.push( formatTimes(raw) ); // First time given by this row
-		
 		
 			// Finally, push the object onto the classOptions list
 			classOptions.push(thisClass);
@@ -213,10 +217,10 @@ function handleClassPage(html, callback){
 };
 
 
-/*
-	Takes in a raw class row data object and extracts the times from it
-	Will return a properly formatted class time object
-*/
+/**
+ * Takes in a raw class row data object and extracts the times from it
+ * Will return a properly formatted class time object
+ */
 function formatTimes(rawData){
 	// Create a new object to store the time
 	var time = {};
@@ -316,17 +320,17 @@ function formatTimes(rawData){
 	return time;
 };
 
-/*
-	Will add a class to the global classTopics list, if not already present
-*/
-function addClassTopic(classID, className){
+/**
+ * Will add a class to the global classTopics list, if not already present
+ */
+function addClassTopic(classID, subjectID, className){
 	// Check if the class is already listed, and if it isn't, list it
 	if (! (classID in classTopics))
 	{
 		// Create a new object to store the classTopic data
 		var classToAdd = {};
-		// Select the first part of the class ID as the subjectID
-		classToAdd.subjectID = classID.split('-')[0];
+
+		classToAdd.subjectID = subjectID;
 		classToAdd.className = className;
 
 		// Add classToAdd to the classTopics object with the classID as a key
@@ -334,22 +338,21 @@ function addClassTopic(classID, className){
 	}
 
 	// Check for a name conflict, sending a warning if one is found.
-	// Skip this if we just added a class (that's what 'else' does here)
+	// Skip this if we just added a class (that's what 'else' is doing here)
 	else if( classTopics[classID].className !== className )
 	{
 		if(debug || warnings)
 			console.log("Warning: Name conflict for class "+classID+". Keeping original name.");
-		return;
 	}
 };
 
 
 /**
-	Looks through the select at the top of the page to find all URLs
-	that we have to look through to collect class data.
-	Args: a baseURL to look at for the links and a callback to call
-	with a list of full URLs to scrape when done.
-**/
+ * Looks through the select at the top of the page to find all URLs
+ * that we have to look through to collect class data.
+ * Args: a baseURL to look at for the links and a callback to call
+ * with a list of full URLs to scrape when done.
+ */
 function getPageURLs(baseURL, callback) {
 	request(baseURL, function (error, response, html) {
 		// Only continue if we got a successful response
@@ -366,15 +369,23 @@ function getPageURLs(baseURL, callback) {
 			$('select').find('option').each(function(){
 				if ($(this).val() != "")
 				{
-					// Push the value onto the list of urls, adding 
-					// in the baseURL as a prefix
-					urls.push(baseURL + $(this).val());
+					var thisURL = {};
+					var subjectID = $(this).text();
+
+					// Push the value onto the thisURL object, adding 
+					// the baseURL as a prefix
+					thisURL['url'] = baseURL + $(this).val();
+
+					// Add the associated subjectID to the thisURL object
+					thisURL['subjectID'] = subjectID;
+
+
+					// Add this subject to the subjects list
+					addSubject(subjectID);
+
+					urls.push(thisURL);
 				}
 			});
-
-			// Since the subjects are listed on this page, go ahead and
-			// send the already requested html to the subject scraper
-			scrapeSubjects(html);
 
 			// Finally, call the callback, passing along the list of URLs
 			callback(urls);
@@ -388,54 +399,57 @@ function getPageURLs(baseURL, callback) {
 
 
 /**
-	Takes in the HTML from the start page and scrapes the list of subjects
-	from the main table, adding them to the global 'subjects' variable
-**/
-function scrapeSubjects(html){
-	// Load the html into cheerio, treating it just like jQuery
-	var $ = cheerio.load(html);
+ * Takes in the subject name from the start page <select> and 
+ * adds it to the global 'subjects' variable
+ */
+function addSubject(subjectID){
+	// Create a new object to store the subject
+	var subject = {};
 
-	// Select the <tr>s containing subject data, slicing away 
-	// the first header result and then looping through each
-	$('.filterable').find('tr').slice(1).each(function(){
-		// Create a new object to store the subject
-		var subject = {};
+	// Thanks to UF's dumb registrar page, the subjectID and subjectName
+	// are the same. Woo, go outdated technology!
+	subject.subjectID = subjectID;
+	// Leave the subject name out so we don't display it twice
+	subject.subjectName = ' ';
 
-		// Select the first row of data and store it as the subjectID
-		subject.subjectID = $(this).find('td').eq(0).text();
-
-		// Select the second row of data and store it as the subjectID
-		subject.subjectName = $(this).find('td').eq(1).text();
-
-		// Push the completed subject object onto the global subjects list
-		subjects.push(subject);
-	});
+	// Push the completed subject object onto the global subjects list
+	subjects.push(subject);
 };
 
 
-/*
-	Formats all of the scraped data into a well-formed obeject
-	that follows the output specifications in the README.
-*/
+/**
+ * Formats all of the scraped data into a well-formed obeject
+ * that follows the output specifications in the README.
+ */
 function formatReturnObject(){
 	// Incorporate global variables into a single return object
 	output = {};
 	output.schoolID = schoolID;
 	output.schoolName = schoolName;
 	output.subjects = subjects;
-	output.classTopics = classTopics; // 
+	output.classTopics = formatClassTopics(classTopics); 
 	output.classOptions = classOptions;
 
 	return output;
 }
 
-
-/*
-	Takes in the global keyed classTopics object and reformats it into a
-	list of non-keyed classTopics objects where the objects contain the keys.
-*/
+/**
+ * Takes in a classTopics object that is keyed by classID
+ * and converts and returns it as an equivalent list
+ */
 function formatClassTopics(topicsObject){
 	var topicsList = [];
+
+	for(key in topicsObject)
+	{
+		topicsList.push(
+		{
+			subjectID: topicsObject[key].subjectID,
+			classID: key,
+			className: topicsObject[key].className
+		}
+		);
+	}
 
 	return topicsList;
 }
