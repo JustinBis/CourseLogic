@@ -8,7 +8,7 @@
 ////////////////////////
 
 // The base URL for CourseLogic API requests
-var APIhost = "api/";
+var APIhost = "api/UF/";
 
 
 //////////////////////
