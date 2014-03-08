@@ -98,7 +98,7 @@ exports.updateClassData = function(classDataObject){
 	updateClassOptions( classDataObject.classOptions, classDataObject.schoolID );
 
 	// Log that we've finished here
-	console.log('Updating UF classes in the database...');
+	console.log('Updated UF classes in the database');
 }
 
 
@@ -116,24 +116,14 @@ function updateSubjects(subjects, schoolID) {
 	// First, empty the current collection as upserting will leave old entries that should be removed
 	Subject.remove({}, function () { });
 
-	// Insert each subject as its own document
+	// Add the schoolID to each subject object
 	subjects.forEach( function(subject) {
-		var conditions = {
-			schoolID: schoolID,
-			subjectID: subject.subjectID,
-			subjectName: subject.subjectName
-		}
-
-		// The passed object should define all of the fields to update except for the schoolID
 		subject.schoolID = schoolID
+	});
 
-		var options = {
-			upsert: true // Will insert if no doc is found
-		}
-
-		Subject.findOneAndUpdate(conditions, subject, options, function(err, result){
-			if(err) return logError('Error updating subjects in the DB', err);
-		});
+	// Insert all as an array
+	Subject.create(subjects, function(err, result){
+		if(err) return logError('Error updating subjects in the DB', err);
 	});
 }
 
@@ -147,24 +137,14 @@ function updateClassTopics(classTopics, schoolID) {
 	// First, empty the current collection as upserting will leave old entries that should be removed
 	ClassTopic.remove({}, function () { });
 
-	// Insert each topic as its own document
+	// Add the schoolID to each topic object
 	classTopics.forEach( function(topic) {
-		var conditions = {
-			schoolID: schoolID,
-			subjectID: topic.subjectID,
-			classID: topic.classID
-		}
-
-		// The passed object should already define all of the fields to update except for the schoolID
 		topic.schoolID = schoolID;
+	});
 
-		var options = {
-			upsert: true // Will insert if no doc is found
-		}
-
-		ClassTopic.findOneAndUpdate(conditions, topic, options, function(err, result){
-			if(err) return logError('Error updating class topics in the DB', err);
-		});
+	// Insert all as an array
+	ClassTopic.create(classTopics, function(err, result){
+		if(err) return logError('Error updating class topics in the DB', err);
 	});
 }
 
@@ -177,24 +157,14 @@ function updateClassOptions(classOptions, schoolID) {
 	// First, empty the current collection as upserting will leave old entries that should be removed
 	ClassOption.remove({}, function () { });
 
-	// Insert each class as its own document
+	// Add the schoolID to each classOption object
 	classOptions.forEach( function(classOption) {
-		var conditions = {
-			schoolID: schoolID,
-			classID: classOption.classID,
-			crn: classOption.crn
-		}
-
-		// The passed object should define all of the fields to update except for the schoolID
 		classOption.schoolID = schoolID;
+	});
 
-		var options = {
-			upsert: true // Will insert if no doc is found
-		}
-
-		ClassOption.findOneAndUpdate(conditions, classOption, options, function(err, result){
-			if(err) return logError('Error updating class options in the DB', err);
-		});
+	// Insert all as an array
+	ClassOption.create(classOptions, function(err, result){
+		if(err) return logError('Error updating class options in the DB', err);
 	});
 }
 

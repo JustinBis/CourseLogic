@@ -213,7 +213,7 @@ $('#selectTopic').on('show', function(){
 	var subjectID = $('#classSubjectSelect option:selected').attr('data-index');
 	// Show the loading text
 	$('#selectTopicLoading').show();
-	$.getJSON(APIhost+'topics?subjectID='+subjectID)
+	$.getJSON(APIhost+'topics?subjectID='+ encodeURIComponent(subjectID) )
 		// Function to run if the GET is successful
 		.done(function(data) {
 			$.each(data, function(){
