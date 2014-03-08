@@ -72,7 +72,7 @@ exports.getClasses = function(req, res){
 	ClassOption
 	.find({ schoolID: req.params.schoolID.toUpperCase() })
 	.where({ classID: req.query.classID.toUpperCase() })
-	.select('-schoolID -_id') // Exclude schoolID _id
+	.select('-schoolID -_id') // Exclude schoolID and _id
 	.sort({ crn: 'ascending'})
 	.exec(function(err, results) {
 		if(err) return logError('Error getting class options from DB', err);
@@ -96,6 +96,9 @@ exports.updateClassData = function(classDataObject){
 
 	// Finally, update the class options
 	updateClassOptions( classDataObject.classOptions, classDataObject.schoolID );
+
+	// Log that we've finished here
+	console.log('Updating UF classes in the database...');
 }
 
 
@@ -152,7 +155,7 @@ function updateClassTopics(classTopics, schoolID) {
 			classID: topic.classID
 		}
 
-		// The passed object should define all of the fields to update except for the schoolID
+		// The passed object should already define all of the fields to update except for the schoolID
 		topic.schoolID = schoolID;
 
 		var options = {
