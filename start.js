@@ -11,7 +11,7 @@
 var forever = require('forever-monitor');
 
 var child = new (forever.Monitor)('server.js', {
-	max: 5,
+	max: 8,
 	silent: false, // Don't silence the std streams
 	options: []
 	'minUptime': 3000,     // Minimum time a child process has to be up. Forever will 'exit' otherwise.
