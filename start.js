@@ -13,7 +13,7 @@ var forever = require('forever-monitor');
 var child = new (forever.Monitor)('server.js', {
 	max: 8,
 	silent: false, // Don't silence the std streams
-	options: []
+	options: [],
 	minUptime: 3000,     // Minimum time a child process has to be up. Forever will 'exit' otherwise.
     spinSleepTime: 15000, // Interval between restarts if a child is spinning (i.e. alive < minUptime).
 });
