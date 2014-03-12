@@ -9,6 +9,7 @@
 	1. Initialize Select2 on all <select> tags
 	2. Draw the #visual canvas
 	3. Activate bootstrap tooltips to show users how to use the site
+	4. Offer help to new users via the tutorial that highlights the tooltips
 **/
 
 $( document ).ready(function() {
@@ -20,11 +21,14 @@ $( document ).ready(function() {
 	// Draw the #visual canvas
 	updateSelections();
 
-	//Activate all bootstrap tooltips
-	$("[data-toggle='tooltip']").tooltip();
+	// Check if the user has been here before and offer help if they haven't.
+	if(readCookie('firstTime') == null)
+	{
+		// This is their first time! Offer help!
+		window.setTimeout(function()
+		{
+			$("#tutorialButton").tooltip('show');
+		}, 4000); // 4 second delay before the tooltip is automatically shown.
+	}
 
-	// Show tooltips and tutorial information to new users
-	// TODO: Write the tutorial js file, make sure it has a function to check
-	// if a user needs to see the tut
-	//startTutorial();
 });

@@ -10,6 +10,7 @@
     <!-- CDN styles -->
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
 	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 
     <!-- Local styles -->
 
@@ -58,10 +59,38 @@
 				<noscript>
 					<div class="alert alert-danger">
 						<button type="button" class="close" data-dismiss="alert">&times;</button>
-						<strong>WARNING:</strong> Pretty much everything on this site requieres JavaScript. Please enable it, or update to a browser that supports the modern web (Chrome, Firefox, Safari).
+						<strong>WARNING:</strong> Pretty much everything on this site requires JavaScript. Please enable it, or update to a browser that supports the modern web (Chrome, Firefox, Safari).
 					</div>
 				</noscript>
-				<button class="btn btn-primary" type="button" data-toggle="modal" data-target="#selectSubject"><i class="icon-plus"></i>&nbsp; Add a Class</button>
+
+				<!-- Buttons -->
+				<button 
+				  class="btn btn-primary"
+				  type="button"
+				  id="selectSubjectButton"
+				  data-toggle="modal"
+				  data-target="#selectSubject"
+				  data-title="Now add your own class!"
+				  data-trigger="manual"
+				  data-placement="bottom"
+				>
+					<i class="icon-plus"></i>
+					&nbsp; Find a Class
+				</button>
+
+				<button
+				  class="btn btn-alert"
+				  type="button"
+				  id="tutorialButton"
+				  data-toggle="tooltip"
+				  data-placement="right"
+				  data-title="First time here? This will explain the buttons."
+				>
+					<i class="icon-info-sign"></i>
+					&nbsp; How do I use this crazy site?
+				</button>
+
+				<!-- End Buttons -->
 			</div>
 		</div>
 
@@ -69,7 +98,15 @@
 
 		<!-- Begin Visual Canvas -->
 		<div class="row pull-right">
-			<canvas id="visual" width="350" height="600">
+			<canvas
+			  id="visual"
+			  width="350"
+			  height="600"
+			  data-toggle="tooltip"
+			  data-placement="left"
+			  data-title="Click and drag to scroll through your schedule."
+			  data-trigger="manual"
+			>
 				<strong>Your browser doesn't support Canvas elements, so you won't be able to see the visual schedule. Why don't you use the latest version of Chrome, Firefox, or Safari instead?</strong>
 			</canvas>
 		</div>
@@ -81,9 +118,27 @@
 				<div id="exampleTable">
 					<table class="table table-bordered">
 						<tbody id="EXAMP-101">
+
 							<tr class="info">
-								<td colspan="6"><i class="icon-trash icon-large"  data-toggle="tooltip" title="The trashcan removes an entire class"></i> &nbsp; <strong>EXAMPLE-101: Underwater Basket Weaving (Add your own real class above)</strong><i class="icon-circle-arrow-down icon-large pull-right" data-toggle="tooltip" title="Clicking this icon will minimize the table so extra classes aren't taking up space."></i></td>
+								<td colspan="6">
+									<i
+									  class="icon-trash icon-large"
+									  id="tutorialTrashcan"
+									  data-toggle="tooltip"
+									  data-title="The trashcan removes an entire class."
+									  data-trigger="manual"
+									></i>
+									&nbsp; <strong>EXAMPLE-101: Underwater Basket Weaving (Add your own real class above)</strong>
+									<i 
+									  class="icon-circle-arrow-down icon-large pull-right"
+									  id="tutorialMinimize"
+									  data-toggle="tooltip"
+									  data-title="Clicking this icon will minimize the table so extra classes aren't taking up space."
+									  data-trigger="manual"
+									></i>
+								</td>
 							</tr>
+
 							<tr class="tableHead">
 								<th></th>
 								<th>CRN</th>
@@ -91,24 +146,52 @@
 								<th>Days</th>
 								<th>Time</th>
 							</tr>
-							<tr data-crn="000">
-								<td><i class="icon-remove" data-toggle="tooltip" title="These icons remove a single class row."></i></td>
+
+							<tr 
+							  data-crn="000"
+							  id="tutorialRow"
+							  data-toggle="tooltip"
+							  data-placement="right"
+							  data-title="Click anywhere in a row to select or deselect a class."
+							  data-trigger="manual"
+							 >
+								<td>
+									<i
+									  class="icon-remove"
+									  id="tutorialX"
+									  data-toggle="tooltip"
+									  data-title="These icons remove a single class row."
+									  data-trigger="manual"
+									></i>
+								</td>
 								<td>000</td>
 								<td>Professor Squarepants
-									<a href="#" data-toggle="tooltip" title="These icons link to the professor's RateMyProfessors page."><i class="icon-question-sign"></i></a>
+									<a
+									  href="#"
+									  id="tutorialRMP"
+									  data-toggle="tooltip"
+									  data-title="These icons search for the professor's RateMyProfessors page."
+									  data-trigger="manual"
+									>
+										<i class="icon-question-sign"></i>
+									</a>
 								</td>
 								<td>MW</td>
 								<td>8:00am - 9:45am</tr>
 							</tr>
+
 							<tr data-crn="0000" class="success">
-								<td><i class="icon-remove" data-toggle="tooltip" title="These icons remove a single class row."></i></td>
+								<td><i class="icon-remove"></i></td>
 								<td>0000</td>
 								<td>Professor Patrick
-									<a href="#" data-toggle="tooltip" title="These icons link to the professor's RateMyProfessors page."><i class="icon-question-sign"></i></a>
+									<a href="#">
+										<i class="icon-question-sign"></i>
+									</a>
 								</td>
 								<td>TR</td>
 								<td>11:00am - 12:45pm</tr>
 							</tr>
+
 						</tbody>				
 					</table>
 				</div>
@@ -258,16 +341,15 @@
     <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
 
     <!-- Local Javascript -->
-    <!-- Moved to CDN:
-    <script src="js/lib/jquery-1.10.1.min.js"></script>
-    <script src="js/lib/bootstrap.min.js"></script>
-    -->
     <script src="js/lib/jquery.mousewheel.js"></script>
     <script src="js/lib/select2.js"></script>
 
     <script src="js/variables.js"></script>
     <script src="js/controls.js"></script>
+    <script src="js/tableBuilder.js"></script>
     <script src="js/visual.js"></script>
+    <script src="js/cookies.js"></script>
+    <script src="js/tutorial.js"></script>
     <script src="js/init.js"></script>
 
     <!-- Google Analytics -->

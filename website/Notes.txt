@@ -1,7 +1,10 @@
 TODO:
-	Add error handling to the website so that we can inform the user when the server returns a 500 Error Status Code
-
 	Allow the course visual to scroll down the page with you (remove from flow?)
 
 	Consolidate class selection into a single modal (eliminating need for subjects table) by allowing type-ahead into a blank field.
 	The old style is still useful though, is it possible to have both?
+
+	Start using Require.js to speed js loading
+	Move toward MVC style by creating a central data structure
+	that stores the class data and updates tables and canvas
+	seperately from their handlers.
