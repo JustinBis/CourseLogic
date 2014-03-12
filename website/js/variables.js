@@ -10,10 +10,15 @@
 // The base URL for CourseLogic API requests
 var APIhost = "api/UF/";
 
+var schoolName = "University of Florida";
+
 
 //////////////////////
 // VISUAL VARIABLES //
 //////////////////////
+
+// The title to be shown at the top of the visual
+var VISUAL_TITLE = "Schedule";
 
 // These constants define the earliest and latest hours the
 // schedule canvas will scroll to, in 24-hour format

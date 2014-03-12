@@ -74,7 +74,7 @@ function drawHeader(){
 	// Draw text on to the header
 	context.fillStyle = "rgb(51,51,51)"; // Matches the bootstrap black
 	context.font = "20pt Helvetica bold";
-	context.fillText("Visual", context.canvas.width/2, rowHeight/2); // Fill Text to the center
+	context.fillText(VISUAL_TITLE, context.canvas.width/2, rowHeight/2); // Fill Text to the center
 }
 
 /**

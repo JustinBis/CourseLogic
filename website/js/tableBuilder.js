@@ -40,7 +40,7 @@ var createClassRowHTML = function(crn, professor, times){
 		{
 			s += professor;
 			// Don't show the Rate My Prof icon if the professor is unknown
-			if(professor != "TBA")
+			if(professor != "TBA" || professor != "STAFF")
 				s += createRateMyProfessorIcon(professor);
 		}
 		else
@@ -62,7 +62,9 @@ var createClassRowHTML = function(crn, professor, times){
 var createRateMyProfessorIcon = function(professor){
 	var s = '&nbsp;&nbsp;<a href="https://www.google.com/search?q=';
 	s += professor.replace(" ", "+");
-	s += '+Auburn+University+Rate+My+Professors" target="_blank">';
+	s += "+"
+	s += schoolName.replace(" ", "+");
+	s += '" target="_blank">';
 	s += '<i class="icon-question-sign"></i>';
 	return s;
 };
