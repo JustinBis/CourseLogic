@@ -32,14 +32,13 @@ app.get('/updateAll', function(req, res){
 app.use(express.static(__dirname + '/website' ));
 // 404
 app.use(function(req, res){
-  res.send(404, "Looking around, eh? Well, see, this page doesn't exist. \
-  				Or does it? Either way, 404.");
+  res.send(404, "Looking around, eh? Well, see, this page doesn't exist. That's a 404.");
 });
 // Error handling
 app.use(function(err, req, res, next){
   console.error(err);
-  res.send(500, "Oh no! Internal Server Error! Don't worry, a team of highly \
-  				knowledgable gorillas have been dispatched to check it out.");
+  res.send(500, "Internal Server Error! Don't worry, a team of highly \
+  				knowledgable gorillas has been dispatched to check it out.");
 });
 
 // Bind the express app to a port, with 80 as the default

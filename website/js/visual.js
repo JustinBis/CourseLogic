@@ -231,8 +231,17 @@ var updateSelections = function(){
 		}
 
 		// Parse the times
-		var startTime = parseTime(rawTimes[0]);
-		var endTime = parseTime(rawTimes[1]);
+		try
+		{
+			var startTime = parseTime(rawTimes[0]);
+			var endTime = parseTime(rawTimes[1]);
+		}
+		catch(e)
+		{
+			console.log("Error parsing times:")
+			console.log(rawTimes);
+			return;
+		}
 
 
 		// Finally, build the object and push it onto the global store

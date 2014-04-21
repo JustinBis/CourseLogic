@@ -16,6 +16,18 @@ $('#classes').on('click', '.icon-trash', function(){
 	});
 });
 
+
+/**
+	Attaches a click handler to any anchor tags in the classes area to stop
+	the event propogation, preventing the row from being selected when
+	the rate my professor question mark icons are clicked. (Or any link is clicked in the furture)
+**/
+$('#classes').on('click', 'a', function(event){
+	// Stop the click from propgating so we don't toggle the row select
+	event.stopPropagation();
+});
+
+
 /**
 	Attaches a click handler to the remove row icons that works even when new rows are added.
 **/
